@@ -157,6 +157,7 @@ button{
     position:absolute;
     left:50%;
     bottom:0;
+    transform: translateX(-50%);
     transform-origin:bottom center;
     animation:cardAppear 0.6s ease forwards;
     transition: transform 0.5s;
@@ -380,7 +381,7 @@ function circleEffect(card){
         const y = Math.cos(rad) * radius;
 
         card.style.transform =
-            `translate(-50%,0) translate(${x}px,${-y+radius}px) rotate(${angle}deg)`;
+            `translateX(-50%) translate(${x}px,${-y+radius}px) rotate(${angle}deg)`;
 
     });
 }
