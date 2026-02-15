@@ -85,8 +85,9 @@ body::before{
     border:2px solid gold;
 }
 
+/* ✅ แก้ path ตรงนี้ */
 .front{
-    background:url("./13D5B6B3-91B5-4A63-BFEC-C09AF3BDD8BA.png") center/cover no-repeat;
+    background:url("13D5B6B3-91B5-4A63-BFEC-C09AF3BDD8BA.png") center/cover no-repeat;
 }
 
 .back{ transform:rotateY(180deg); }
@@ -147,6 +148,7 @@ body::before{
     background: radial-gradient(circle, rgba(255,215,0,0.35) 0%, transparent 60%);
     opacity:0;
     transition:1s;
+    pointer-events:none;
 }
 .magic.show{opacity:1;}
 
@@ -221,6 +223,8 @@ const deck = [
 let selected = 0;
 let chosen = [];
 
+/* ===== JS เดิมทั้งหมด ไม่เปลี่ยน ===== */
+
 function flashMagic(){
     const m = document.getElementById("magic");
     m.classList.add("show");
@@ -254,7 +258,6 @@ function start(){
     document.getElementById("result").innerHTML = "";
     const cardsDiv = document.getElementById("cards");
     cardsDiv.innerHTML = "";
-    cardsDiv.style.animation="rotateRing 20s linear infinite";
 
     let shuffled = [...deck].sort(()=>Math.random()-0.5).slice(0,6);
 
@@ -276,7 +279,9 @@ function start(){
         back.className="back";
 
         const img = document.createElement("img");
-        img.src = "./" + name;
+
+        /* ✅ แก้ path ให้ iPad โหลดชัวร์ */
+        img.src = name;
 
         back.appendChild(img);
         inner.appendChild(front);
@@ -347,14 +352,34 @@ function showFinalCards(){
 }
 
 function generateAI(card){
+
 return `✨ ไพ่ ${card} ได้ปรากฏขึ้นต่อหน้าคุณ ✨
 
 พลังงานของจักรวาลกำลังเคลื่อนไหวรอบตัวคุณในช่วงเวลานี้
 สิ่งที่คุณกำลังเผชิญไม่ใช่เรื่องบังเอิญ
 แต่เป็นเส้นทางที่ถูกกำหนดมาเพื่อให้คุณเติบโต
 
+ไพ่ใบนี้สะท้อนถึงการเปลี่ยนแปลงภายในจิตใจ
+และโอกาสใหม่ที่กำลังเข้ามาใกล้
+
+คุณอาจรู้สึกสับสนในบางเรื่อง
+แต่ความจริงแล้วคุณกำลังเข้าใกล้คำตอบมากขึ้น
+
+ช่วงเวลานี้ควรใช้สัญชาตญาณมากกว่าเหตุผล
+เพราะพลังงานลึกภายในกำลังนำทางคุณ
+
+ในด้านความรัก ไพ่บอกถึงการพัฒนา
+หรือการเปลี่ยนสถานะบางอย่าง
+
+ด้านการเงิน มีแนวโน้มดีขึ้น
+หากคุณกล้าตัดสินใจ
+
+ด้านอนาคต คุณกำลังเข้าสู่ช่วงสำคัญของชีวิต
+
+สิ่งสำคัญที่สุดคือ
 จงเชื่อมั่นในตัวเอง
-จักรวาลกำลังสนับสนุนคุณ`;
+
+จักรวาลกำลังสนับสนุนคุณอยู่เสมอ`;
 }
 
 function analyze(){
