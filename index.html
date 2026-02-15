@@ -4,14 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>🔮 Tarot Master Reading</title>
+<title>🔮 Cosmic Tarot AI</title>
 
 <style>
 
 body{
     margin:0;
     font-family:'Prompt',sans-serif;
-    background: radial-gradient(circle at top,#0b001a,#1a0033,#000);
+    background: radial-gradient(circle at top,#070012,#14002b,#000);
     color:white;
     text-align:center;
     overflow-x:hidden;
@@ -37,7 +37,7 @@ button{
     padding:14px 28px;
     border:none;
     border-radius:30px;
-    background:linear-gradient(45deg,#6a00ff,#ff4fd8);
+    background:linear-gradient(45deg,#7b2cff,#ff4fd8);
     color:white;
     font-size:18px;
     cursor:pointer;
@@ -55,8 +55,8 @@ button{
 }
 
 .card{
-    width:170px;
-    height:260px;
+    width:180px;
+    height:280px;
     perspective:1000px;
     cursor:pointer;
 }
@@ -93,7 +93,7 @@ button{
     border:2px solid white;
 }
 
-/* เอฟเฟกต์พลัง */
+/* เอฟเฟกต์ */
 .magic{
     position:absolute;
     width:6px;
@@ -118,14 +118,26 @@ button{
     color:#ffd6ff;
 }
 
+input{
+    padding:10px;
+    width:250px;
+    border-radius:10px;
+    border:none;
+    margin-top:10px;
+}
+
 </style>
 </head>
 
 <body>
 
-<h1>🔮 พิธีเปิดไพ่ทาโรต์ระดับจักรวาล 🔮</h1>
-<p>ตั้งจิตอธิษฐาน แล้วเลือกไพ่ 3 ใบ</p>
+<h1>🔮 ไพ่ทาโรต์จักรวาล AI 🔮</h1>
 
+<p>พิมพ์คำถามของคุณ แล้วเลือกไพ่ 3 ใบ</p>
+
+<input id="question" placeholder="เช่น ความรักจะเป็นยังไง">
+
+<br>
 <button onclick="start()">เริ่มพิธี</button>
 
 <div class="cards" id="cards"></div>
@@ -139,7 +151,7 @@ button{
 <script>
 
 /* ดาว */
-for(let i=0;i<150;i++){
+for(let i=0;i<180;i++){
     let s=document.createElement("div");
     s.className="star";
     s.style.left=Math.random()*100+"%";
@@ -147,11 +159,10 @@ for(let i=0;i<150;i++){
     document.body.appendChild(s);
 }
 
-/* ไพ่ */
+/* ไพ่ 78 ใบ */
 const tarot=[];
 
-/* Major */
-const majors=[
+const names=[
 "The Fool","The Magician","The High Priestess","The Empress","The Emperor",
 "The Hierophant","The Lovers","The Chariot","Strength","The Hermit",
 "Wheel of Fortune","Justice","The Hanged Man","Death","Temperance",
@@ -159,30 +170,23 @@ const majors=[
 "Judgement","The World"
 ];
 
-majors.forEach(n=>{
+names.forEach(n=>{
     tarot.push({
         name:n,
-        img:`https://source.unsplash.com/300x500/?tarot,${n}`,
-        up:"พลังงานด้านบวก การเปลี่ยนแปลง โอกาสใหม่",
-        rev:"ความล่าช้า ความไม่มั่นใจ หรืออุปสรรค",
-        love:"ความรักมีการเปลี่ยนแปลงสำคัญ",
-        advice:"เชื่อสัญชาตญาณของตัวเอง แล้วเดินหน้าต่อ"
+        img:`https://raw.githubusercontent.com/ekelen/tarot-api/master/static/cards/${n.toLowerCase().replace(/ /g,"_")}.jpg`,
+        meaning:"พลังงานสำคัญของชีวิต การเปลี่ยนแปลง และโอกาสใหม่"
     });
 });
 
-/* Minor */
-const suits=["cups","wands","swords","pentacles"];
+const suits=["cups","pentacles","swords","wands"];
 const ranks=["ace","two","three","four","five","six","seven","eight","nine","ten","page","knight","queen","king"];
 
 suits.forEach(s=>{
     ranks.forEach(r=>{
         tarot.push({
             name:r+" of "+s,
-            img:`https://source.unsplash.com/300x500/?tarot,card`,
-            up:"สถานการณ์กำลังเคลื่อนไปข้างหน้า",
-            rev:"มีความล่าช้า หรือความสับสน",
-            love:"ความสัมพันธ์มีบทเรียนให้เรียนรู้",
-            advice:"ใช้เหตุผลควบคู่ความรู้สึก"
+            img:`https://raw.githubusercontent.com/ekelen/tarot-api/master/static/cards/${r}_of_${s}.jpg`,
+            meaning:"สถานการณ์ในชีวิตประจำวันที่มีบทเรียนให้เรียนรู้"
         });
     });
 });
@@ -192,11 +196,12 @@ let picked=[];
 /* เริ่ม */
 function start(){
 
-    speak("จงตั้งจิต และเลือกไพ่สามใบ เพื่อเปิดเผยโชคชะตาของคุณ");
+    speak("จงตั้งจิต แล้วเลือกไพ่สามใบ");
+
+    picked=[];
 
     const area=document.getElementById("cards");
     area.innerHTML="";
-    picked=[];
 
     for(let i=0;i<6;i++){
 
@@ -218,7 +223,7 @@ function start(){
     }
 }
 
-/* เลือกไพ่ */
+/* เลือก */
 function selectCard(card,index){
 
     if(picked.length>=3) return;
@@ -250,7 +255,7 @@ function selectCard(card,index){
 /* เอฟเฟกต์ */
 function magic(el){
 
-    for(let i=0;i<20;i++){
+    for(let i=0;i<25;i++){
 
         let m=document.createElement("div");
         m.className="magic";
@@ -266,40 +271,39 @@ function magic(el){
     }
 }
 
-/* วิเคราะห์ผล */
+/* AI วิเคราะห์ */
 function showResult(){
 
     const pos=["อดีต","ปัจจุบัน","อนาคต"];
+    let question=document.getElementById("question").value;
 
-    let text="";
+    let text=`<h2>✨ ผลการทำนาย ✨</h2>`;
 
     picked.forEach((p,i)=>{
 
         text+=`
-        <h3>${pos[i]}</h3>
-        <b>${p.data.name}</b> ${p.reversed?"(กลับหัว)":""}
+        <b>${pos[i]}: ${p.data.name}</b>
+        ${p.reversed?"(กลับหัว)":""}
         <br>
-        ${p.reversed?p.data.rev:p.data.up}
-        <br>
-        ❤️ ความรัก: ${p.data.love}
-        <br>
-        🔮 คำแนะนำ: ${p.data.advice}
+        ${p.data.meaning}
         <hr>
         `;
     });
 
     text+=`
-    <h2>✨ สรุปภาพรวมโชคชะตา ✨</h2>
-    ไพ่ทั้งสามใบกำลังบอกว่า ชีวิตกำลังอยู่ในช่วงเปลี่ยนผ่านสำคัญ
-    หากคุณเชื่อมั่นในตัวเอง และเดินหน้าต่อ โอกาสใหม่จะเกิดขึ้นแน่นอน
+    <h3>🔮 AI วิเคราะห์</h3>
+    ไพ่ทั้งสามใบสะท้อนว่าชีวิตกำลังอยู่ในช่วงเปลี่ยนแปลง
+    คำถามเกี่ยวกับ "${question}" มีแนวโน้มไปในทางที่ดี
+    หากคุณเชื่อมั่นในตัวเอง และตัดสินใจอย่างมีสติ
+    ผลลัพธ์จะออกมาน่าพอใจ
     `;
 
     document.getElementById("result").innerHTML=text;
 
-    speak("ไพ่ได้เปิดเผยโชคชะตาของคุณแล้ว");
+    speak("ไพ่ได้เปิดเผยคำตอบแล้ว");
 }
 
-/* เสียงหมอดู */
+/* เสียง */
 function speak(t){
 
     let msg=new SpeechSynthesisUtterance(t);
