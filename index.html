@@ -16,8 +16,6 @@ body{
     text-align:center;
 }
 
-/* เอฟเฟกต์เวท */
-
 .magic{
     position:fixed;
     width:100%;
@@ -27,10 +25,7 @@ body{
     transition:1s;
     pointer-events:none;
 }
-
 .magic.show{opacity:1;}
-
-/* Loading */
 
 .loading{
     position:fixed;
@@ -70,8 +65,6 @@ button{
     color:white;
     font-size:18px;
 }
-
-/* ไพ่ */
 
 #cards{
     display:flex;
@@ -151,9 +144,7 @@ style="padding:10px;border-radius:10px;border:none;">
 
 <script>
 
-/* =====================
-   ไพ่
-===================== */
+/* ไพ่ */
 
 const deck = [
 "The_Fool.png","The_Magician.png","The_High_Priestess.png",
@@ -168,9 +159,7 @@ const deck = [
 let selected = 0;
 let chosen = [];
 
-/* =====================
-   เอฟเฟกต์เวท
-===================== */
+/* เอฟเฟกต์ */
 
 function flashMagic(){
     const m = document.getElementById("magic");
@@ -178,9 +167,7 @@ function flashMagic(){
     setTimeout(()=>m.classList.remove("show"),1000);
 }
 
-/* =====================
-   AI Voice
-===================== */
+/* AI Voice */
 
 function speakAI(text){
 
@@ -194,15 +181,11 @@ function speakAI(text){
     speechSynthesis.speak(speech);
 }
 
-/* =====================
-   Loading
-===================== */
+/* Loading */
 
 function showLoading(text){
-
     const load = document.getElementById("loading");
     document.getElementById("loadingText").innerText = text;
-
     load.style.display = "flex";
 }
 
@@ -210,9 +193,7 @@ function hideLoading(){
     document.getElementById("loading").style.display = "none";
 }
 
-/* =====================
-   เริ่ม
-===================== */
+/* เริ่ม */
 
 function start(){
 
@@ -260,20 +241,17 @@ function start(){
 
         });
 
-    },1500);
+    },1200);
 
 }
 
-/* =====================
-   เลือกไพ่
-===================== */
+/* เลือกไพ่ */
 
 function pick(inner,name,img){
 
     if(selected>=3) return;
 
     flashMagic();
-
     inner.classList.add("flip");
 
     let reversed = Math.random()<0.5;
@@ -291,20 +269,22 @@ function pick(inner,name,img){
 
     if(selected===3){
 
-        showLoading("กำลังอ่านพลังงานจักรวาล...");
-        speakAI("ฉันกำลังเชื่อมต่อพลังงานของจักรวาล");
-
         setTimeout(()=>{
-            analyze();
-            hideLoading();
-        },3000);
+
+            showLoading("กำลังอ่านพลังงานจักรวาล...");
+            speakAI("ฉันกำลังเชื่อมต่อพลังงานของจักรวาล");
+
+            setTimeout(()=>{
+                hideLoading();
+                analyze();
+            },2500);
+
+        },1000);
 
     }
 }
 
-/* =====================
-   AI วิเคราะห์
-===================== */
+/* AI */
 
 function generateAI(card){
 
@@ -337,9 +317,7 @@ return `✨ ไพ่ ${card} ได้ปรากฏขึ้นต่อห�
 จักรวาลกำลังสนับสนุนคุณอยู่เสมอ`;
 }
 
-/* =====================
-   วิเคราะห์
-===================== */
+/* วิเคราะห์ */
 
 function analyze(){
 
