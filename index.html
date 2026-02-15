@@ -3,16 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tarot Reading 🔮</title>
+
+<title>🔮 Tarot Master Reading</title>
 
 <style>
 
 body{
     margin:0;
     font-family:'Prompt',sans-serif;
-    background: radial-gradient(circle at top,#14002b,#2b0057,#090012);
+    background: radial-gradient(circle at top,#0b001a,#1a0033,#000);
     color:white;
     text-align:center;
+    overflow-x:hidden;
 }
 
 /* ดาว */
@@ -32,29 +34,29 @@ body{
 
 /* ปุ่ม */
 button{
-    padding:12px 25px;
+    padding:14px 28px;
     border:none;
-    border-radius:25px;
-    background:linear-gradient(45deg,#7b2cff,#ff4fd8);
+    border-radius:30px;
+    background:linear-gradient(45deg,#6a00ff,#ff4fd8);
     color:white;
     font-size:18px;
     cursor:pointer;
     margin:15px;
-    box-shadow:0 0 15px #ff99ff;
+    box-shadow:0 0 20px #ff99ff;
 }
 
 /* ไพ่ */
 .cards{
     display:flex;
     justify-content:center;
-    gap:20px;
+    gap:25px;
     flex-wrap:wrap;
     margin-top:30px;
 }
 
 .card{
-    width:160px;
-    height:250px;
+    width:170px;
+    height:260px;
     perspective:1000px;
     cursor:pointer;
 }
@@ -74,14 +76,14 @@ button{
 .front,.back{
     position:absolute;
     inset:0;
-    border-radius:12px;
+    border-radius:14px;
     backface-visibility:hidden;
 }
 
 .front{
-    background:linear-gradient(45deg,#2a004f,#6a00ff);
+    background:linear-gradient(45deg,#1a0033,#4b00ff);
     border:2px solid #d0aaff;
-    box-shadow:0 0 20px #c266ff;
+    box-shadow:0 0 25px #c266ff;
 }
 
 .back{
@@ -91,11 +93,28 @@ button{
     border:2px solid white;
 }
 
+/* เอฟเฟกต์พลัง */
+.magic{
+    position:absolute;
+    width:6px;
+    height:6px;
+    background:#ff99ff;
+    border-radius:50%;
+    animation:float 3s linear forwards;
+}
+
+@keyframes float{
+    to{
+        transform:translateY(-200px);
+        opacity:0;
+    }
+}
+
 #result{
-    max-width:600px;
+    max-width:650px;
     margin:auto;
-    margin-top:20px;
-    line-height:1.6;
+    margin-top:30px;
+    line-height:1.7;
     color:#ffd6ff;
 }
 
@@ -104,7 +123,7 @@ button{
 
 <body>
 
-<h1>🔮 พิธีเปิดไพ่ทาโรต์ 🔮</h1>
+<h1>🔮 พิธีเปิดไพ่ทาโรต์ระดับจักรวาล 🔮</h1>
 <p>ตั้งจิตอธิษฐาน แล้วเลือกไพ่ 3 ใบ</p>
 
 <button onclick="start()">เริ่มพิธี</button>
@@ -113,14 +132,14 @@ button{
 
 <div id="result"></div>
 
-<audio id="sound">
+<audio id="magicSound">
 <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_115b9b1d7c.mp3">
 </audio>
 
 <script>
 
-/* ดาวพื้นหลัง */
-for(let i=0;i<120;i++){
+/* ดาว */
+for(let i=0;i<150;i++){
     let s=document.createElement("div");
     s.className="star";
     s.style.left=Math.random()*100+"%";
@@ -128,10 +147,11 @@ for(let i=0;i<120;i++){
     document.body.appendChild(s);
 }
 
-/* ไพ่ 78 ใบ */
-const tarot = [];
+/* ไพ่ */
+const tarot=[];
 
-const names = [
+/* Major */
+const majors=[
 "The Fool","The Magician","The High Priestess","The Empress","The Emperor",
 "The Hierophant","The Lovers","The Chariot","Strength","The Hermit",
 "Wheel of Fortune","Justice","The Hanged Man","Death","Temperance",
@@ -139,16 +159,18 @@ const names = [
 "Judgement","The World"
 ];
 
-names.forEach(n=>{
+majors.forEach(n=>{
     tarot.push({
         name:n,
         img:`https://source.unsplash.com/300x500/?tarot,${n}`,
-        up:"พลังบวก การเปลี่ยนแปลง โอกาสใหม่",
-        rev:"พลังติดขัด ความลังเล อุปสรรค",
-        love:"ความรักมีบทเรียนสำคัญเกิดขึ้น"
+        up:"พลังงานด้านบวก การเปลี่ยนแปลง โอกาสใหม่",
+        rev:"ความล่าช้า ความไม่มั่นใจ หรืออุปสรรค",
+        love:"ความรักมีการเปลี่ยนแปลงสำคัญ",
+        advice:"เชื่อสัญชาตญาณของตัวเอง แล้วเดินหน้าต่อ"
     });
 });
 
+/* Minor */
 const suits=["cups","wands","swords","pentacles"];
 const ranks=["ace","two","three","four","five","six","seven","eight","nine","ten","page","knight","queen","king"];
 
@@ -157,20 +179,20 @@ suits.forEach(s=>{
         tarot.push({
             name:r+" of "+s,
             img:`https://source.unsplash.com/300x500/?tarot,card`,
-            up:"สถานการณ์กำลังพัฒนาไปตามเหตุการณ์",
-            rev:"มีความล่าช้า หรือความไม่ชัดเจน",
-            love:"ความสัมพันธ์มีการเปลี่ยนแปลง"
+            up:"สถานการณ์กำลังเคลื่อนไปข้างหน้า",
+            rev:"มีความล่าช้า หรือความสับสน",
+            love:"ความสัมพันธ์มีบทเรียนให้เรียนรู้",
+            advice:"ใช้เหตุผลควบคู่ความรู้สึก"
         });
     });
 });
 
-/* ตัวแปร */
 let picked=[];
 
 /* เริ่ม */
 function start(){
 
-    speak("จงเลือกไพ่สามใบ เพื่อดูอดีต ปัจจุบัน และอนาคต");
+    speak("จงตั้งจิต และเลือกไพ่สามใบ เพื่อเปิดเผยโชคชะตาของคุณ");
 
     const area=document.getElementById("cards");
     area.innerHTML="";
@@ -201,7 +223,7 @@ function selectCard(card,index){
 
     if(picked.length>=3) return;
 
-    document.getElementById("sound").play();
+    document.getElementById("magicSound").play();
 
     let reversed=Math.random()<0.5;
 
@@ -218,11 +240,33 @@ function selectCard(card,index){
 
     picked.push({data,reversed});
 
-    showResult();
+    magic(card);
 
+    if(picked.length===3){
+        showResult();
+    }
 }
 
-/* แสดงผล */
+/* เอฟเฟกต์ */
+function magic(el){
+
+    for(let i=0;i<20;i++){
+
+        let m=document.createElement("div");
+        m.className="magic";
+
+        let rect=el.getBoundingClientRect();
+
+        m.style.left=rect.left+rect.width/2+"px";
+        m.style.top=rect.top+rect.height/2+"px";
+
+        document.body.appendChild(m);
+
+        setTimeout(()=>m.remove(),3000);
+    }
+}
+
+/* วิเคราะห์ผล */
 function showResult(){
 
     const pos=["อดีต","ปัจจุบัน","อนาคต"];
@@ -238,12 +282,21 @@ function showResult(){
         ${p.reversed?p.data.rev:p.data.up}
         <br>
         ❤️ ความรัก: ${p.data.love}
+        <br>
+        🔮 คำแนะนำ: ${p.data.advice}
         <hr>
         `;
     });
 
+    text+=`
+    <h2>✨ สรุปภาพรวมโชคชะตา ✨</h2>
+    ไพ่ทั้งสามใบกำลังบอกว่า ชีวิตกำลังอยู่ในช่วงเปลี่ยนผ่านสำคัญ
+    หากคุณเชื่อมั่นในตัวเอง และเดินหน้าต่อ โอกาสใหม่จะเกิดขึ้นแน่นอน
+    `;
+
     document.getElementById("result").innerHTML=text;
 
+    speak("ไพ่ได้เปิดเผยโชคชะตาของคุณแล้ว");
 }
 
 /* เสียงหมอดู */
