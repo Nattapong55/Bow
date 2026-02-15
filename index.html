@@ -16,6 +16,7 @@ body{
     text-align:center;
 }
 
+/* เอฟเฟกต์เวท */
 .magic{
     position:fixed;
     width:100%;
@@ -36,6 +37,8 @@ button{
     color:white;
     font-size:18px;
 }
+
+/* ไพ่ */
 
 #cards{
     display:flex;
@@ -59,20 +62,30 @@ button{
     position:relative;
 }
 
-.flip{ transform:rotateY(180deg); }
+.flip{
+    transform:rotateY(180deg);
+}
+
+/* หน้า / หลัง */
 
 .front,.back{
     position:absolute;
     width:100%;
     height:100%;
-    backface-visibility:hidden;
     border-radius:12px;
+    backface-visibility:hidden;
+    overflow:hidden;
+    border:2px solid gold;
 }
 
+/* ⭐ ปกไพ่ */
 .front{
-    background:url("card-back.png") center/cover;
+    background-image:url("./card-back.png");
+    background-size:cover;
+    background-position:center;
 }
 
+/* ไพ่จริง */
 .back{
     transform:rotateY(180deg);
 }
@@ -80,9 +93,10 @@ button{
 .back img{
     width:100%;
     height:100%;
-    border-radius:12px;
+    object-fit:cover;
 }
 
+/* ไพ่กลับหัว */
 .reversed{
     transform:rotate(180deg);
 }
@@ -155,16 +169,7 @@ function speakAI(text){
     speech.rate = 0.9;
     speech.pitch = 1.1;
 
-    // โหลดเสียงก่อน (แก้ iPad)
-    let voices = speechSynthesis.getVoices();
-
-    if(voices.length===0){
-        speechSynthesis.onvoiceschanged = ()=>{
-            speechSynthesis.speak(speech);
-        };
-    }else{
-        speechSynthesis.speak(speech);
-    }
+    speechSynthesis.speak(speech);
 }
 
 /* =====================
@@ -293,8 +298,6 @@ return `✨ ไพ่ ${cardName} ได้ปรากฏขึ้นต่อ�
 ===================== */
 
 function analyze(){
-
-    const q = document.getElementById("question").value || "ชีวิต";
 
     let text = "🔮 ผลการเปิดไพ่ 🔮\n\n";
 
