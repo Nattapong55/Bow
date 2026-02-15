@@ -33,16 +33,14 @@ body::before{
     to{transform:translateY(-40px)}
 }
 
-/* 🎥 cinematic zoom */
-.zoom{
-    animation:zoomIn 1.2s ease forwards;
-}
+/* cinematic zoom */
+.zoom{ animation:zoomIn 1.2s ease forwards; }
 @keyframes zoomIn{
     from{transform:scale(1)}
     to{transform:scale(1.15)}
 }
 
-/* ไพ่ container */
+/* ไพ่หมุน */
 #cards{
     position:relative;
     width:420px;
@@ -66,6 +64,7 @@ body::before{
     perspective:1000px;
     transition:1s;
 }
+
 .inner{
     width:100%;
     height:100%;
@@ -73,6 +72,7 @@ body::before{
     transition:0.8s;
     position:relative;
 }
+
 .flip{ transform:rotateY(180deg); }
 
 .front,.back{
@@ -84,37 +84,38 @@ body::before{
     overflow:hidden;
     border:2px solid gold;
 }
+
 .front{
-    background:url("13D5B6B3-91B5-4A63-BFEC-C09AF3BDD8BA.png") center/cover no-repeat;
+    background:url("./13D5B6B3-91B5-4A63-BFEC-C09AF3BDD8BA.png") center/cover no-repeat;
 }
+
 .back{ transform:rotateY(180deg); }
+
 .back img{
     width:100%;
     height:100%;
     object-fit:cover;
 }
+
 .reversed{ transform:rotate(180deg); }
 
-/* ไพ่ลอยเข้ากลาง */
+/* พุ่งเข้ากลาง */
 .centerFly{
     position:fixed !important;
     left:50% !important;
     top:50% !important;
-    transform:translate(-50%,-50%) scale(1.4) !important;
+    transform:translate(-50%,-50%) scale(1.5) !important;
     z-index:999;
 }
 
-/* เรียงกลาง 3 ใบ */
+/* เรียง 3 ใบ */
 .centerRow{
     position:relative !important;
-    left:auto !important;
-    top:auto !important;
-    transform:none !important;
     display:inline-block;
     margin:10px;
 }
 
-/* 💥 แสงระเบิด */
+/* แสงระเบิด */
 .burst{
     position:absolute;
     width:220px;
@@ -138,6 +139,16 @@ body::before{
         0 0 40px #facc15,
         0 0 70px #9333ea;
 }
+
+/* magic screen */
+.magic{
+    position:fixed;
+    inset:0;
+    background: radial-gradient(circle, rgba(255,215,0,0.35) 0%, transparent 60%);
+    opacity:0;
+    transition:1s;
+}
+.magic.show{opacity:1;}
 
 /* loading */
 .loading{
@@ -172,16 +183,6 @@ button{
     color:white;
     font-size:18px;
 }
-
-/* magic */
-.magic{
-    position:fixed;
-    inset:0;
-    background: radial-gradient(circle, rgba(255,215,0,0.35) 0%, transparent 60%);
-    opacity:0;
-    transition:1s;
-}
-.magic.show{opacity:1;}
 </style>
 </head>
 
@@ -191,7 +192,7 @@ button{
 
 <div class="loading" id="loading">
     <div class="spinner"></div>
-    <div id="loadingText">กำลังวิเคราะห์พลังงานจักรวาล...</div>
+    <div id="loadingText">กำลังอ่านพลังงานจักรวาล...</div>
 </div>
 
 <h1>🔮 ไพ่ทาโรต์จักรวาล 🔮</h1>
@@ -203,7 +204,6 @@ style="padding:10px;border-radius:10px;border:none;">
 <button onclick="start()">เริ่มเปิดไพ่</button>
 
 <div id="cards"></div>
-
 <div id="result" style="max-width:700px;margin:auto;margin-top:20px;"></div>
 
 <script>
@@ -224,7 +224,7 @@ let chosen = [];
 function flashMagic(){
     const m = document.getElementById("magic");
     m.classList.add("show");
-    setTimeout(()=>m.classList.remove("show"),1000);
+    setTimeout(()=>m.classList.remove("show"),800);
 }
 
 function speakAI(text){
@@ -237,13 +237,11 @@ function speakAI(text){
 }
 
 function showLoading(text){
-    const load = document.getElementById("loading");
     document.getElementById("loadingText").innerText = text;
-    load.style.display = "flex";
+    document.getElementById("loading").style.display="flex";
 }
-
 function hideLoading(){
-    document.getElementById("loading").style.display = "none";
+    document.getElementById("loading").style.display="none";
 }
 
 function start(){
@@ -256,45 +254,40 @@ function start(){
     document.getElementById("result").innerHTML = "";
     const cardsDiv = document.getElementById("cards");
     cardsDiv.innerHTML = "";
+    cardsDiv.style.animation="rotateRing 20s linear infinite";
 
     let shuffled = [...deck].sort(()=>Math.random()-0.5).slice(0,6);
 
-    setTimeout(()=>{
+    shuffled.forEach((name,index)=>{
 
-        speakAI("เลือกไพ่สามใบ ตามสัญชาตญาณของคุณ");
+        const angle = (360 / shuffled.length) * index;
 
-        shuffled.forEach((name,index)=>{
+        const card = document.createElement("div");
+        card.className="card";
+        card.style.transform = `translate(-50%,-50%) rotate(${angle}deg)`;
 
-            const angle = (360 / shuffled.length) * index;
+        const inner = document.createElement("div");
+        inner.className="inner";
 
-            const card = document.createElement("div");
-            card.className="card";
-            card.style.transform = `translate(-50%,-50%) rotate(${angle}deg)`;
+        const front = document.createElement("div");
+        front.className="front";
 
-            const inner = document.createElement("div");
-            inner.className="inner";
+        const back = document.createElement("div");
+        back.className="back";
 
-            const front = document.createElement("div");
-            front.className="front";
+        const img = document.createElement("img");
+        img.src = "./" + name;
 
-            const back = document.createElement("div");
-            back.className="back";
+        back.appendChild(img);
+        inner.appendChild(front);
+        inner.appendChild(back);
+        card.appendChild(inner);
 
-            const img = document.createElement("img");
-            img.src = name;
+        card.onclick=()=>pick(card,inner,name,img);
 
-            back.appendChild(img);
-            inner.appendChild(front);
-            inner.appendChild(back);
-            card.appendChild(inner);
+        cardsDiv.appendChild(card);
 
-            card.onclick=()=>pick(card,inner,name,img);
-
-            cardsDiv.appendChild(card);
-
-        });
-
-    },1200);
+    });
 
 }
 
@@ -303,11 +296,9 @@ function pick(card,inner,name,img){
     if(selected>=3) return;
 
     flashMagic();
-
-    document.getElementById("cards").style.animation="none";
+    document.body.classList.add("zoom");
 
     card.classList.add("centerFly");
-    document.body.classList.add("zoom");
 
     const burst=document.createElement("div");
     burst.className="burst";
@@ -315,9 +306,7 @@ function pick(card,inner,name,img){
 
     inner.classList.add("glow");
 
-    setTimeout(()=>{
-        inner.classList.add("flip");
-    },600);
+    setTimeout(()=>inner.classList.add("flip"),400);
 
     let reversed = Math.random()<0.5;
     if(reversed) img.classList.add("reversed");
@@ -331,7 +320,7 @@ function pick(card,inner,name,img){
     selected++;
 
     if(selected===3){
-        setTimeout(showFinalCards,1200);
+        setTimeout(showFinalCards,1400);
     }
 }
 
@@ -357,36 +346,15 @@ function showFinalCards(){
     },2500);
 }
 
-/* ✅ AI TEXT ยาว */
 function generateAI(card){
-
 return `✨ ไพ่ ${card} ได้ปรากฏขึ้นต่อหน้าคุณ ✨
 
 พลังงานของจักรวาลกำลังเคลื่อนไหวรอบตัวคุณในช่วงเวลานี้
 สิ่งที่คุณกำลังเผชิญไม่ใช่เรื่องบังเอิญ
 แต่เป็นเส้นทางที่ถูกกำหนดมาเพื่อให้คุณเติบโต
 
-ไพ่ใบนี้สะท้อนถึงการเปลี่ยนแปลงภายในจิตใจ
-และโอกาสใหม่ที่กำลังเข้ามาใกล้
-
-คุณอาจรู้สึกสับสนในบางเรื่อง
-แต่ความจริงแล้วคุณกำลังเข้าใกล้คำตอบมากขึ้น
-
-ช่วงเวลานี้ควรใช้สัญชาตญาณมากกว่าเหตุผล
-เพราะพลังงานลึกภายในกำลังนำทางคุณ
-
-ในด้านความรัก ไพ่บอกถึงการพัฒนา
-หรือการเปลี่ยนสถานะบางอย่าง
-
-ด้านการเงิน มีแนวโน้มดีขึ้น
-หากคุณกล้าตัดสินใจ
-
-ด้านอนาคต คุณกำลังเข้าสู่ช่วงสำคัญของชีวิต
-
-สิ่งสำคัญที่สุดคือ
 จงเชื่อมั่นในตัวเอง
-
-จักรวาลกำลังสนับสนุนคุณอยู่เสมอ`;
+จักรวาลกำลังสนับสนุนคุณ`;
 }
 
 function analyze(){
