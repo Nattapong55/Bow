@@ -16,7 +16,6 @@ body{
     overflow-x:hidden;
 }
 
-/* ⭐ ดาว */
 body::before{
     content:"";
     position:fixed;
@@ -33,34 +32,25 @@ body::before{
     to{transform:translateY(-40px)}
 }
 
-/* cinematic zoom */
-.zoom{ animation:zoomIn 1.2s ease forwards; }
-@keyframes zoomIn{
-    from{transform:scale(1)}
-    to{transform:scale(1.15)}
-}
-
-/* ไพ่หมุน */
 #cards{
     position:relative;
-    width:420px;
-    height:420px;
+    width:520px;
+    height:520px;
     margin:40px auto;
-    animation:rotateRing 20s linear infinite;
+    animation:rotateRing 30s linear infinite;
 }
 @keyframes rotateRing{
     from{transform:rotate(0deg)}
     to{transform:rotate(360deg)}
 }
 
-/* ไพ่ */
 .card{
     width:120px;
     height:200px;
     position:absolute;
     left:50%;
     top:50%;
-    transform-origin:center -180px;
+    transform-origin:center -230px;
     perspective:1000px;
     transition:1s;
 }
@@ -85,7 +75,6 @@ body::before{
     border:2px solid gold;
 }
 
-/* ✅ แก้ path ตรงนี้ */
 .front{
     background:url("13D5B6B3-91B5-4A63-BFEC-C09AF3BDD8BA.png") center/cover no-repeat;
 }
@@ -100,83 +89,20 @@ body::before{
 
 .reversed{ transform:rotate(180deg); }
 
-/* พุ่งเข้ากลาง */
 .centerFly{
     position:fixed !important;
     left:50% !important;
     top:50% !important;
-    transform:translate(-50%,-50%) scale(1.5) !important;
+    transform:translate(-50%,-50%) scale(1.6) !important;
     z-index:999;
 }
 
-/* เรียง 3 ใบ */
 .centerRow{
     position:relative !important;
     display:inline-block;
     margin:10px;
 }
 
-/* แสงระเบิด */
-.burst{
-    position:absolute;
-    width:220px;
-    height:220px;
-    left:50%;
-    top:50%;
-    transform:translate(-50%,-50%);
-    border-radius:50%;
-    background:radial-gradient(circle,white,gold,transparent 70%);
-    animation:burstAnim 0.6s ease-out;
-}
-@keyframes burstAnim{
-    from{transform:translate(-50%,-50%) scale(0.2);opacity:1}
-    to{transform:translate(-50%,-50%) scale(1.8);opacity:0}
-}
-
-/* glow */
-.glow{
-    box-shadow:
-        0 0 20px gold,
-        0 0 40px #facc15,
-        0 0 70px #9333ea;
-}
-
-/* magic screen */
-.magic{
-    position:fixed;
-    inset:0;
-    background: radial-gradient(circle, rgba(255,215,0,0.35) 0%, transparent 60%);
-    opacity:0;
-    transition:1s;
-    pointer-events:none;
-}
-.magic.show{opacity:1;}
-
-/* loading */
-.loading{
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,0.85);
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    flex-direction:column;
-    font-size:22px;
-    z-index:9999;
-    display:none;
-}
-.spinner{
-    width:60px;
-    height:60px;
-    border:5px solid gold;
-    border-top:5px solid transparent;
-    border-radius:50%;
-    animation:spin 1s linear infinite;
-    margin-bottom:20px;
-}
-@keyframes spin{to{transform:rotate(360deg);}}
-
-/* ปุ่ม */
 button{
     padding:14px 28px;
     border:none;
@@ -189,13 +115,6 @@ button{
 </head>
 
 <body>
-
-<div class="magic" id="magic"></div>
-
-<div class="loading" id="loading">
-    <div class="spinner"></div>
-    <div id="loadingText">กำลังอ่านพลังงานจักรวาล...</div>
-</div>
 
 <h1>🔮 ไพ่ทาโรต์จักรวาล 🔮</h1>
 
@@ -210,47 +129,57 @@ style="padding:10px;border-radius:10px;border:none;">
 
 <script>
 
+/* ไพ่ทั้งหมด 78 ใบ */
+
 const deck = [
+
+/* Major */
 "The_Fool.png","The_Magician.png","The_High_Priestess.png",
 "The_Empress.png","The_Emperor.png","The_Lovers.png",
 "The_Chariot.png","Strength.png","The_Hermit.png",
 "Wheel_of_Fortune.png","Justice.png","The_Hanged_Man.png",
 "Death.png","Temperance.png","The_Devil.png",
 "The_Tower.png","The_Star.png","The_Moon.png",
-"The_Sun.png","Judgement.png","The_World.png"
+"The_Sun.png","Judgement.png","The_World.png",
+
+/* Cups */
+"Ace_of_Cups.png","Two_of_Cups.png","Three_of_Cups.png","Four_of_Cups.png",
+"Five_of_Cups.png","Six_of_Cups.png","Seven_of_Cups.png","Eight_of_Cups.png",
+"Nine_of_Cups.png","Ten_of_Cups.png",
+"Page_of_Cups.png","Knight_of_Cups.png","Queen_of_Cups.png","King_of_Cups.png",
+
+/* Pentacles */
+"Ace_of_Pentacles.png","Two_of_Pentacles.png","Three_of_Pentacles.png","Four_of_Pentacles.png",
+"Five_of_Pentacles.png","Six_of_Pentacles.png","Seven_of_Pentacles.png","Eight_of_Pentacles.png",
+"Nine_of_Pentacles.png","Ten_of_Pentacles.png",
+"Page_of_Pentacles.png","Knight_of_Pentacles.png","Queen_of_Pentacles.png","King_of_Pentacles.png",
+
+/* Swords */
+"Ace_of_Swords.png","Two_of_Swords.png","Three_of_Swords.png","Four_of_Swords.png",
+"Five_of_Swords.png","Six_of_Swords.png","Seven_of_Swords.png","Eight_of_Swords.png",
+"Nine_of_Swords.png","Ten_of_Swords.png",
+"Page_of_Swords.png","Knight_of_Swords.png","Queen_of_Swords.png","King_of_Swords.png",
+
+/* Wands */
+"Ace_of_Wands.png","Two_of_Wands.png","Three_of_Wands.png","Four_of_Wands.png",
+"Five_of_Wands.png","Six_of_Wands.png","Seven_of_Wands.png","Eight_of_Wands.png",
+"Nine_of_Wands.png","Ten_of_Wands.png",
+"Page_of_Wands.png","Knight_of_Wands.png","Queen_of_Wands.png","King_of_Wands.png"
+
 ];
 
 let selected = 0;
 let chosen = [];
 
-/* ===== JS เดิมทั้งหมด ไม่เปลี่ยน ===== */
-
-function flashMagic(){
-    const m = document.getElementById("magic");
-    m.classList.add("show");
-    setTimeout(()=>m.classList.remove("show"),800);
-}
-
 function speakAI(text){
     const speech = new SpeechSynthesisUtterance(text);
     speech.lang = "th-TH";
-    speech.rate = 0.85;
-    speech.pitch = 1.15;
+    speech.rate = 0.9;
     speechSynthesis.cancel();
     speechSynthesis.speak(speech);
 }
 
-function showLoading(text){
-    document.getElementById("loadingText").innerText = text;
-    document.getElementById("loading").style.display="flex";
-}
-function hideLoading(){
-    document.getElementById("loading").style.display="none";
-}
-
 function start(){
-
-    speakAI("กำลังสับไพ่ โปรดตั้งสมาธิ");
 
     selected = 0;
     chosen = [];
@@ -259,7 +188,8 @@ function start(){
     const cardsDiv = document.getElementById("cards");
     cardsDiv.innerHTML = "";
 
-    let shuffled = [...deck].sort(()=>Math.random()-0.5).slice(0,6);
+    /* สุ่มไพ่เยอะขึ้น */
+    let shuffled = [...deck].sort(()=>Math.random()-0.5).slice(0,12);
 
     shuffled.forEach((name,index)=>{
 
@@ -279,8 +209,6 @@ function start(){
         back.className="back";
 
         const img = document.createElement("img");
-
-        /* ✅ แก้ path ให้ iPad โหลดชัวร์ */
         img.src = name;
 
         back.appendChild(img);
@@ -300,17 +228,7 @@ function pick(card,inner,name,img){
 
     if(selected>=3) return;
 
-    flashMagic();
-    document.body.classList.add("zoom");
-
     card.classList.add("centerFly");
-
-    const burst=document.createElement("div");
-    burst.className="burst";
-    card.appendChild(burst);
-
-    inner.classList.add("glow");
-
     setTimeout(()=>inner.classList.add("flip"),400);
 
     let reversed = Math.random()<0.5;
@@ -332,9 +250,7 @@ function pick(card,inner,name,img){
 function showFinalCards(){
 
     const cardsDiv = document.getElementById("cards");
-
     cardsDiv.innerHTML="";
-    document.body.classList.remove("zoom");
 
     chosen.forEach(c=>{
         c.el.classList.remove("centerFly");
@@ -342,13 +258,7 @@ function showFinalCards(){
         cardsDiv.appendChild(c.el);
     });
 
-    showLoading("กำลังอ่านพลังงานจักรวาล...");
-    speakAI("ฉันกำลังเชื่อมต่อพลังงานของจักรวาล");
-
-    setTimeout(()=>{
-        hideLoading();
-        analyze();
-    },2500);
+    analyze();
 }
 
 function generateAI(card){
