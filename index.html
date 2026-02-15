@@ -4,22 +4,38 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>🔮 ไพ่ทาโรต์จักรวาล AI</title>
+<title>🔮 Cosmic Tarot AI</title>
 
 <style>
-body {
+body{
     margin:0;
-    font-family: sans-serif;
-    background: radial-gradient(circle at top, #2b0a4a, #000);
+    font-family:sans-serif;
+    background: radial-gradient(circle,#2b0a4a,#000);
     color:white;
     text-align:center;
 }
 
-h1{
-    margin-top:20px;
+h1{margin-top:20px;}
+
+input{
+    padding:12px;
+    border-radius:10px;
+    border:none;
+    width:250px;
 }
 
-#cards {
+button{
+    padding:12px 20px;
+    border:none;
+    border-radius:10px;
+    background:#a855f7;
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+    margin:10px;
+}
+
+#cards{
     display:flex;
     justify-content:center;
     flex-wrap:wrap;
@@ -27,14 +43,11 @@ h1{
     margin-top:30px;
 }
 
-.card {
+.card{
     width:160px;
     height:260px;
-    border-radius:15px;
     cursor:pointer;
-    position:relative;
     transition:0.6s;
-    transform-style: preserve-3d;
 }
 
 .card img{
@@ -43,21 +56,29 @@ h1{
     border-radius:15px;
 }
 
-.flip{
-    transform: rotateY(180deg);
+.reversed{
+    transform: rotate(180deg);
 }
 
 .result{
     margin-top:20px;
     padding:20px;
+    max-width:600px;
+    margin-left:auto;
+    margin-right:auto;
 }
 </style>
-
 </head>
+
 <body>
 
 <h1>🔮 ไพ่ทาโรต์จักรวาล AI 🔮</h1>
-<p>เลือกไพ่ 3 ใบ</p>
+
+<p>พิมพ์คำถามของคุณ</p>
+
+<input id="question" placeholder="เช่น ความรักจะเป็นยังไง">
+<br>
+<button onclick="start()">เริ่มดูไพ่</button>
 
 <div id="cards"></div>
 
@@ -66,132 +87,113 @@ h1{
 <script>
 
 const tarotCards = [
-"Ace_of_Cups.png",
-"Ace_of_Pentacles.png",
-"Ace_of_Swords.png",
-"Ace_of_Wands.png",
-"Two_of_Cups.png",
-"Two_of_Pentacles.png",
-"Two_of_Swords.png",
-"Two_of_Wands.png",
-"Three_of_Cups.png",
-"Three_of_Pentacles.png",
-"Three_of_Swords.png",
-"Three_of_Wands.png",
-"Four_of_Cups.png",
-"Four_of_Pentacles.png",
-"Four_of_Swords.png",
-"Four_of_Wands.png",
-"Five_of_Cups.png",
-"Five_of_Pentacles.png",
-"Five_of_Swords.png",
-"Five_of_Wands.png",
-"Six_of_Cups.png",
-"Six_of_Pentacles.png",
-"Six_of_Swords.png",
-"Six_of_Wands.png",
-"Seven_of_Cups.png",
-"Seven_of_Pentacles.png",
-"Seven_of_Swords.png",
-"Seven_of_Wands.png",
-"Eight_of_Cups.png",
-"Eight_of_Pentacles.png",
-"Eight_of_Swords.png",
-"Eight_of_Wands.png",
-"Nine_of_Cups.png",
-"Nine_of_Pentacles.png",
-"Nine_of_Swords.png",
-"Nine_of_Wands.png",
-"Ten_of_Cups.png",
-"Ten_of_Pentacles.png",
-"Ten_of_Swords.png",
-"Ten_of_Wands.png",
-
-"Page_of_Cups.png",
-"Page_of_Pentacles.png",
-"Page_of_Swords.png",
-"Page_of_Wands.png",
-"Knight_of_Cups.png",
-"Knight_of_Pentacles.png",
-"Knight_of_Swords.png",
-"Knight_of_Wands.png",
-"Queen_of_Cups.png",
-"Queen_of_Pentacles.png",
-"Queen_of_Swords.png",
-"Queen_of_Wands.png",
-"King_of_Cups.png",
-"King_of_Pentacles.png",
-"King_of_Swords.png",
-"King_of_Wands.png",
-
-"The_Fool.png",
-"The_Magician.png",
-"The_High_Priestess.png",
-"The_Empress.png",
-"The_Emperor.png",
-"The_Hierophant.png",
-"The_Lovers.png",
-"The_Chariot.png",
-"Strength.png",
-"The_Hermit.png",
-"Wheel_of_Fortune.png",
-"Justice.png",
-"The_Hanged_Man.png",
-"Death.png",
-"Temperance.png",
-"The_Devil.png",
-"The_Tower.png",
-"The_Star.png",
-"The_Moon.png",
-"The_Sun.png",
-"Judgement.png",
-"The_World.png"
+"The_Fool.png","The_Magician.png","The_High_Priestess.png",
+"The_Empress.png","The_Emperor.png","The_Lovers.png",
+"The_Chariot.png","Strength.png","The_Hermit.png",
+"Wheel_of_Fortune.png","Justice.png","The_Hanged_Man.png",
+"Death.png","Temperance.png","The_Devil.png","The_Tower.png",
+"The_Star.png","The_Moon.png","The_Sun.png","Judgement.png","The_World.png"
 ];
 
-const meanings = [
-"การเริ่มต้นใหม่ ความหวัง",
-"โอกาสทางการเงิน",
-"ความคิดชัดเจน",
-"พลังและแรงบันดาลใจ"
-];
+const meanings = {
+"The_Fool":"การเริ่มต้นใหม่ การผจญภัย",
+"The_Lovers":"ความรัก ความสัมพันธ์ การตัดสินใจ",
+"The_Sun":"ความสำเร็จ ความสุข",
+"The_Tower":"การเปลี่ยนแปลงฉับพลัน",
+"The_Star":"ความหวัง การเยียวยา",
+"The_Moon":"ความไม่แน่นอน ความกังวล",
+"The_World":"ความสำเร็จสมบูรณ์",
+"Death":"การเปลี่ยนแปลงครั้งใหญ่",
+"Strength":"พลังใจ ความอดทน"
+};
 
 let selected = 0;
 
-function shuffle(array) {
-  return array.sort(() => Math.random() - 0.5);
+function speak(text){
+
+    const msg = new SpeechSynthesisUtterance(text);
+    msg.lang = "th-TH";
+    speechSynthesis.speak(msg);
+
 }
 
-let deck = shuffle([...tarotCards]).slice(0,6);
+function start(){
 
-const container = document.getElementById("cards");
+    document.getElementById("cards").innerHTML="";
+    document.getElementById("result").innerHTML="";
+    selected=0;
 
-deck.forEach(cardName => {
+    let deck = tarotCards.sort(()=>Math.random()-0.5).slice(0,6);
 
-    const card = document.createElement("div");
-    card.className = "card";
+    deck.forEach(cardName=>{
 
-    const img = document.createElement("img");
+        let card=document.createElement("div");
+        card.className="card";
 
-    img.src = cardName;   // ⭐ สำคัญ แก้แล้ว
+        let img=document.createElement("img");
+        img.src=cardName;
 
-    card.appendChild(img);
+        card.appendChild(img);
 
-    card.onclick = () => {
+        card.onclick=()=>selectCard(cardName,img);
 
-        if(selected >= 3) return;
+        document.getElementById("cards").appendChild(card);
 
-        card.classList.add("flip");
+    });
 
-        selected++;
+}
 
-        document.getElementById("result").innerHTML +=
-        "<p>🔮 ไพ่: "+ cardName.replace(".png","") +"</p>";
+let chosen=[];
 
-    };
+function selectCard(name,img){
 
-    container.appendChild(card);
+    if(selected>=3) return;
 
-});
+    selected++;
+
+    let reversed = Math.random()<0.5;
+
+    if(reversed){
+        img.classList.add("reversed");
+    }
+
+    chosen.push({
+        name:name.replace(".png",""),
+        reversed:reversed
+    });
+
+    if(selected===3){
+        analyze();
+    }
+
+}
+
+function analyze(){
+
+    let question=document.getElementById("question").value;
+
+    let text="🔮 ผลการทำนาย\n\n";
+
+    chosen.forEach(c=>{
+        text += "ไพ่ "+c.name+(c.reversed?" (กลับหัว)":"")+"\n";
+    });
+
+    text += "\nคำทำนาย:\n";
+
+    // AI วิเคราะห์ง่าย
+    if(question.includes("รัก")){
+        text += "ความรักกำลังมีการเปลี่ยนแปลงไปในทางที่ดี จงเปิดใจและสื่อสาร";
+    }else if(question.includes("งาน")){
+        text += "งานมีโอกาสใหม่เข้ามา แต่ต้องตัดสินใจอย่างรอบคอบ";
+    }else{
+        text += "ชีวิตกำลังเข้าสู่ช่วงเปลี่ยนแปลงสำคัญ โอกาสใหม่กำลังมา";
+    }
+
+    document.getElementById("result").innerText=text;
+
+    speak(text); // 🔊 เสียงหมอดูพูด
+
+}
 
 </script>
 
