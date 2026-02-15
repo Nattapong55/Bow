@@ -14,6 +14,7 @@ body{
     background: radial-gradient(circle,#3b0764,#020617);
     color:white;
     text-align:center;
+    overflow-x:hidden;
 }
 
 /* พื้นหลังเวท */
@@ -82,6 +83,13 @@ button{
     height:230px;
     perspective:1000px;
     position:relative;
+    animation:floatCard 4s ease-in-out infinite;
+}
+
+@keyframes floatCard{
+    0%{transform:translateY(0)}
+    50%{transform:translateY(-12px)}
+    100%{transform:translateY(0)}
 }
 
 .inner{
@@ -90,6 +98,14 @@ button{
     transform-style:preserve-3d;
     transition:0.8s;
     position:relative;
+}
+
+.card:hover .inner{
+    transform:scale(1.07);
+    box-shadow:
+        0 0 30px gold,
+        0 0 60px #a855f7,
+        0 0 100px #9333ea;
 }
 
 .flip{ transform:rotateY(180deg); }
@@ -174,10 +190,48 @@ button{
     to{transform:translateY(-120px) scale(0.3);opacity:0}
 }
 
+/* ⭐ ดาวพื้นหลัง */
+.star{
+    position:fixed;
+    width:3px;
+    height:3px;
+    background:white;
+    border-radius:50%;
+    opacity:0.8;
+    animation:twinkle 2s infinite ease-in-out;
+    pointer-events:none;
+}
+
+@keyframes twinkle{
+    0%,100%{opacity:0.2;transform:scale(1)}
+    50%{opacity:1;transform:scale(1.8)}
+}
+
+/* 🔮 วงเวทหมุน */
+.aura{
+    position:fixed;
+    width:600px;
+    height:600px;
+    border-radius:50%;
+    background:radial-gradient(circle,rgba(168,85,247,0.15),transparent 70%);
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    animation:rotateAura 40s linear infinite;
+    pointer-events:none;
+}
+
+@keyframes rotateAura{
+    from{transform:translate(-50%,-50%) rotate(0deg)}
+    to{transform:translate(-50%,-50%) rotate(360deg)}
+}
+
 </style>
 </head>
 
 <body>
+
+<div class="aura"></div>
 
 <div class="magic" id="magic"></div>
 
@@ -388,6 +442,19 @@ function analyze(){
     document.getElementById("result").innerText = text;
     speakAI(text);
 }
+
+/* ⭐ สร้างดาว */
+function createStars(){
+    for(let i=0;i<70;i++){
+        const star=document.createElement("div");
+        star.className="star";
+        star.style.left=Math.random()*100+"%";
+        star.style.top=Math.random()*100+"%";
+        star.style.animationDelay=Math.random()*2+"s";
+        document.body.appendChild(star);
+    }
+}
+createStars();
 
 </script>
 
