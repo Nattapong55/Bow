@@ -17,6 +17,7 @@ body{
 }
 
 /* เอฟเฟกต์เวท */
+
 .magic{
     position:fixed;
     width:100%;
@@ -194,9 +195,10 @@ function speakAI(text){
     const speech = new SpeechSynthesisUtterance(text);
 
     speech.lang = "th-TH";
-    speech.rate = 0.9;
-    speech.pitch = 1.1;
+    speech.rate = 0.85;
+    speech.pitch = 1.15;
 
+    speechSynthesis.cancel();
     speechSynthesis.speak(speech);
 }
 
@@ -224,7 +226,6 @@ function start(){
 
     speakAI("กำลังสับไพ่ โปรดตั้งสมาธิ");
 
-    shuffleSound.currentTime = 0;
     shuffleSound.play();
 
     selected = 0;
@@ -281,9 +282,7 @@ function pick(inner,name,img){
 
     if(selected>=3) return;
 
-    flipSound.currentTime = 0;
     flipSound.play();
-
     flashMagic();
 
     inner.classList.add("flip");
@@ -306,7 +305,6 @@ function pick(inner,name,img){
         setTimeout(()=>{
 
             showLoading("กำลังอ่านพลังงานจักรวาล...");
-
             speakAI("ฉันกำลังเชื่อมต่อพลังงานของจักรวาล");
 
             windSound.play();
@@ -325,9 +323,9 @@ function pick(inner,name,img){
    AI วิเคราะห์
 ===================== */
 
-function generateAI(cardName){
+function generateAI(card){
 
-return `✨ ไพ่ ${cardName} ได้ปรากฏขึ้นต่อหน้าคุณ ✨
+return `✨ ไพ่ ${card} ได้ปรากฏขึ้นต่อหน้าคุณ ✨
 
 พลังงานของจักรวาลกำลังเคลื่อนไหวรอบตัวคุณในช่วงเวลานี้
 สิ่งที่คุณกำลังเผชิญไม่ใช่เรื่องบังเอิญ
