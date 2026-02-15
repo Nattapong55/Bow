@@ -7,7 +7,6 @@
 <title>🔮 Cosmic Tarot AI</title>
 
 <style>
-
 body{
     margin:0;
     font-family:sans-serif;
@@ -34,32 +33,25 @@ body::before{
     to{transform:translateY(-40px)}
 }
 
-/* วงไพ่ */
 #cards{
     position:relative;
     width:min(520px,90vw);
     height:min(520px,90vw);
     margin:40px auto;
-    animation:rotateRing 30s linear infinite;
-}
-@keyframes rotateRing{
-    from{transform:rotate(0deg)}
-    to{transform:rotate(360deg)}
 }
 
-/* ไพ่ */
 .card{
     width:120px;
     height:200px;
     position:absolute;
     left:50%;
     top:50%;
-    transform-origin:center -230px;
+    transform-origin:center -200px;
     perspective:1000px;
     transition:1s;
+    cursor:pointer;
 }
 
-/* เอฟเฟกต์วงเวท */
 .card::before{
     content:"";
     position:absolute;
@@ -75,8 +67,9 @@ body::before{
     animation:spin 6s linear infinite;
     z-index:-1;
 }
+
 @keyframes spin{
-    from{transform:translate(-50%,-50%) rotate(0)}
+    from{transform:translate(-50%,-50%) rotate(0deg)}
     to{transform:translate(-50%,-50%) rotate(360deg)}
 }
 
@@ -87,6 +80,7 @@ body::before{
     transition:0.8s;
     position:relative;
 }
+
 .flip{ transform:rotateY(180deg); }
 
 .front,.back{
@@ -99,14 +93,11 @@ body::before{
     border:2px solid gold;
 }
 
-/* ✅ ใช้ URL เต็ม */
 .front{
-    background:url("https://nattapong55.github.io/Bow/13D5B6B3-91B5-4A63-BFEC-C09AF3BDD8BA.png") center/cover no-repeat;
+    background:url("13D5B6B3-91B5-4A63-BFEC-C09AF3BDD8BA.png") center/cover no-repeat;
 }
 
-.back{
-    transform:rotateY(180deg);
-}
+.back{ transform:rotateY(180deg); }
 
 .back img{
     width:100%;
@@ -114,9 +105,7 @@ body::before{
     object-fit:cover;
 }
 
-.reversed{
-    transform:rotate(180deg);
-}
+.reversed{ transform:rotate(180deg); }
 
 .centerFly{
     position:fixed !important;
@@ -140,57 +129,37 @@ button{
     color:white;
     font-size:18px;
 }
-
 </style>
 </head>
 
 <body>
 
 <h1>🔮 ไพ่ทาโรต์จักรวาล 🔮</h1>
-
-<input id="question" placeholder="ถามคำถาม..."
-style="padding:10px;border-radius:10px;border:none;">
-<br><br>
-
 <button onclick="start()">เริ่มเปิดไพ่</button>
 
 <div id="cards"></div>
-<div id="result" style="max-width:700px;margin:auto;margin-top:20px;"></div>
 
 <script>
 
-/* ไพ่ */
 const deck = [
 "The_Fool.png","The_Magician.png","The_High_Priestess.png",
 "The_Empress.png","The_Emperor.png","The_Lovers.png",
 "The_Chariot.png","Strength.png","The_Hermit.png",
-"Wheel_of_Fortune.png","Justice.png","The_Hanged_Man.png",
-"Death.png","Temperance.png","The_Devil.png",
-"The_Tower.png","The_Star.png","The_Moon.png",
-"The_Sun.png","Judgement.png","The_World.png"
+"Wheel_of_Fortune.png","Justice.png","The_Hanged_Man.png"
 ];
 
 let selected = 0;
 let chosen = [];
-
-function speakAI(text){
-    const speech = new SpeechSynthesisUtterance(text);
-    speech.lang = "th-TH";
-    speech.rate = 0.9;
-    speechSynthesis.cancel();
-    speechSynthesis.speak(speech);
-}
 
 function start(){
 
     selected = 0;
     chosen = [];
 
-    document.getElementById("result").innerHTML = "";
     const cardsDiv = document.getElementById("cards");
     cardsDiv.innerHTML = "";
 
-    let shuffled = [...deck].sort(()=>Math.random()-0.5).slice(0,12);
+    let shuffled = [...deck].sort(()=>Math.random()-0.5);
 
     shuffled.forEach((name,index)=>{
 
@@ -210,9 +179,7 @@ function start(){
         back.className="back";
 
         const img = document.createElement("img");
-
-        /* 🔥 โหลดจาก GitHub */
-        img.src = "https://nattapong55.github.io/Bow/" + name;
+        img.src = "cards/" + name;
 
         back.appendChild(img);
         inner.appendChild(front);
@@ -237,11 +204,7 @@ function pick(card,inner,name,img){
     let reversed = Math.random()<0.5;
     if(reversed) img.classList.add("reversed");
 
-    chosen.push({
-        el:card,
-        name:name.replace(".png","").replaceAll("_"," "),
-        reversed:reversed
-    });
+    chosen.push(card);
 
     selected++;
 
@@ -256,42 +219,11 @@ function showFinalCards(){
     cardsDiv.innerHTML="";
 
     chosen.forEach(c=>{
-        c.el.classList.remove("centerFly");
-        c.el.classList.add("centerRow");
-        cardsDiv.appendChild(c.el);
+        c.classList.remove("centerFly");
+        c.classList.add("centerRow");
+        cardsDiv.appendChild(c);
     });
 
-    analyze();
-}
-
-function generateAI(card){
-
-return `✨ ไพ่ ${card} ได้ปรากฏขึ้นต่อหน้าคุณ ✨
-
-พลังงานจักรวาลกำลังเปลี่ยนแปลงรอบตัวคุณ
-ช่วงเวลานี้เป็นจุดสำคัญของชีวิต
-
-จงเชื่อมั่นในตัวเอง
-และตัดสินใจด้วยหัวใจ
-
-จักรวาลกำลังสนับสนุนคุณอยู่เสมอ`;
-}
-
-function analyze(){
-
-    let text = "🔮 ผลการเปิดไพ่ 🔮\n\n";
-    const pos = ["อดีต","ปัจจุบัน","อนาคต"];
-
-    chosen.forEach((c,i)=>{
-        text += pos[i]+" : "+c.name+(c.reversed?" (กลับหัว)":"")+"\n";
-    });
-
-    chosen.forEach(c=>{
-        text += "\n\n" + generateAI(c.name);
-    });
-
-    document.getElementById("result").innerText = text;
-    speakAI(text);
 }
 
 </script>
