@@ -31,7 +31,6 @@ body{
     to{opacity:1}
 }
 
-/* container */
 .container{
     padding:20px;
 }
@@ -48,7 +47,7 @@ button{
     box-shadow:0 0 15px #ff99ff;
 }
 
-/* deck animation */
+/* deck */
 .deck{
     width:120px;
     height:180px;
@@ -59,7 +58,7 @@ button{
 .deck div{
     position:absolute;
     inset:0;
-    background:#222;
+    background:linear-gradient(45deg,#2b004f,#5c0099);
     border-radius:10px;
     border:2px solid #c266ff;
 }
@@ -87,6 +86,7 @@ button{
     height:240px;
     perspective:1000px;
     cursor:pointer;
+    box-shadow:0 0 25px #c266ff;
 }
 
 .inner{
@@ -109,7 +109,7 @@ button{
 }
 
 .front{
-    background:#111;
+    background:linear-gradient(45deg,#1a0033,#6600cc);
     border:2px solid #aaa;
 }
 
@@ -119,11 +119,6 @@ button{
     background-position:center;
 }
 
-.card{
-    box-shadow:0 0 20px #c266ff;
-}
-
-/* meaning */
 #meaning{
     margin-top:20px;
     max-width:600px;
@@ -133,7 +128,7 @@ button{
     color:#ffd6ff;
 }
 
-/* glow particles */
+/* magic */
 .magic{
     position:absolute;
     width:6px;
@@ -152,13 +147,11 @@ button{
 
 <body>
 
-<div id="stars"></div>
-
 <div class="container">
 
 <h1>🔮 พิธีเปิดไพ่ทาโรต์ 🔮</h1>
 
-<p id="guide">ตั้งจิตอธิษฐานถึงคำถามของคุณ แล้วกดเริ่มพิธี</p>
+<p>ตั้งจิตอธิษฐาน แล้วกดเริ่มพิธี</p>
 
 <button onclick="startRitual()">เริ่มพิธี</button>
 
@@ -178,7 +171,7 @@ button{
 
 <script>
 
-/* ===== สร้างดาว ===== */
+/* ดาว */
 for(let i=0;i<120;i++){
     let s=document.createElement("div");
     s.className="star";
@@ -189,10 +182,7 @@ for(let i=0;i<120;i++){
 
 /* ===== ไพ่ 78 ใบ ===== */
 
-const tarot = [];
-
-/* Major Arcana */
-const majorNames = [
+const tarotNames = [
 "The Fool","The Magician","The High Priestess","The Empress","The Emperor",
 "The Hierophant","The Lovers","The Chariot","Strength","The Hermit",
 "Wheel of Fortune","Justice","The Hanged Man","Death","Temperance",
@@ -200,35 +190,24 @@ const majorNames = [
 "Judgement","The World"
 ];
 
-majorNames.forEach((name,i)=>{
-    tarot.push({
-        name,
-        img:`https://raw.githubusercontent.com/ekelen/tarot-api/master/static/cards/${name.toLowerCase().replace(/ /g,"_")}.jpg`,
-        meaning:"พลังงานสำคัญของชีวิต การเปลี่ยนแปลง และบทเรียนทางจิตวิญญาณ"
+const suits=["Cups","Pentacles","Swords","Wands"];
+const ranks=["Ace","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Page","Knight","Queen","King"];
+
+suits.forEach(s=>{
+    ranks.forEach(r=>{
+        tarotNames.push(r+" of "+s);
     });
 });
 
-/* Minor Arcana */
-const suits=["cups","pentacles","swords","wands"];
-const ranks=["ace","two","three","four","five","six","seven","eight","nine","ten","page","knight","queen","king"];
+/* ===== ภาพไพ่ (ฝังในโค้ด) ===== */
 
-suits.forEach(suit=>{
-    ranks.forEach(rank=>{
-        tarot.push({
-            name:rank+" of "+suit,
-            img:`https://raw.githubusercontent.com/ekelen/tarot-api/master/static/cards/${rank}_of_${suit}.jpg`,
-            meaning:"เหตุการณ์ในชีวิตประจำวัน อารมณ์ การงาน และความสัมพันธ์"
-        });
-    });
-});
-
-/* ===== ตัวแปร ===== */
-let selected=[];
+const tarotImage = "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/RWS_Tarot_00_Fool.jpg/512px-RWS_Tarot_00_Fool.jpg";
 
 /* ===== เริ่มพิธี ===== */
+
 function startRitual(){
 
-    speak("จงตั้งจิตให้สงบ และเลือกไพ่สามใบ เพื่อเปิดเผยอดีต ปัจจุบัน และอนาคต");
+    speak("จงตั้งจิตให้สงบ และเลือกไพ่สามใบ");
 
     document.getElementById("deck").classList.add("shuffle");
 
@@ -238,16 +217,21 @@ function startRitual(){
     },2000);
 }
 
-/* ===== สร้างไพ่ให้เลือก ===== */
+/* ===== สร้างไพ่ ===== */
+
+let selected=0;
+
 function createCards(){
+
+    selected=0;
 
     const container=document.getElementById("cards");
     container.innerHTML="";
-    selected=[];
+    document.getElementById("meaning").innerHTML="";
 
     for(let i=0;i<6;i++){
 
-        let index=Math.floor(Math.random()*tarot.length);
+        let name=tarotNames[Math.floor(Math.random()*tarotNames.length)];
 
         let card=document.createElement("div");
         card.className="card";
@@ -258,61 +242,60 @@ function createCards(){
             <div class="back"></div>
         </div>`;
 
-        card.onclick=()=>pickCard(card,index);
+        card.onclick=()=>pickCard(card,name);
 
         container.appendChild(card);
     }
 }
 
-/* ===== เลือกไพ่ ===== */
-function pickCard(card,index){
+/* ===== เลือก ===== */
 
-    if(selected.length>=3) return;
+function pickCard(card,name){
+
+    if(selected>=3) return;
+
+    selected++;
 
     let reversed=Math.random()<0.5;
 
-    selected.push({index,reversed,card});
+    reveal(card,name,reversed);
 
-    revealCard(card,index,reversed);
-
-    if(selected.length===3){
+    if(selected===3){
         speak("ไพ่ทั้งสามใบได้เปิดเผยแล้ว");
     }
 }
 
 /* ===== เปิดไพ่ ===== */
-function revealCard(el,index,reversed){
+
+function reveal(el,name,reversed){
 
     document.getElementById("magicSound").play();
 
     el.classList.add("flip");
 
-    let data=tarot[index];
-
     let back=el.querySelector(".back");
-    back.style.backgroundImage=`url('${data.img}')`;
+    back.style.backgroundImage=`url(${tarotImage})`;
 
     if(reversed){
         back.style.transform="rotateY(180deg) rotate(180deg)";
     }
 
-    let pos=["อดีต","ปัจจุบัน","อนาคต"][selected.length-1];
+    let pos=["อดีต","ปัจจุบัน","อนาคต"][selected-1];
 
     let text=`
     <h3>${pos}</h3>
-    <b>${data.name}</b> ${reversed?"(กลับหัว)":""}
-    <br><br>
-    ${data.meaning}
+    <b>${name}</b> ${reversed?"(กลับหัว)":""}
     <br><br>
     ไพ่ใบนี้สะท้อนพลังงานที่กำลังเกิดขึ้นในช่วง${pos}
+    <hr>
     `;
 
-    document.getElementById("meaning").innerHTML+=text+"<hr>";
+    document.getElementById("meaning").innerHTML+=text;
 
     magic(el);
 }
 
-/* ===== เอฟเฟกต์ ===== */
+/* เอฟเฟกต์ */
 function magic(el){
 
     for(let i=0;i<15;i++){
@@ -331,7 +314,7 @@ function magic(el){
     }
 }
 
-/* ===== เสียงหมอดู ===== */
+/* เสียง */
 function speak(text){
 
     let msg=new SpeechSynthesisUtterance(text);
