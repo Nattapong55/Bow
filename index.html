@@ -7,6 +7,7 @@
 <title>🔮 Cosmic Tarot AI</title>
 
 <style>
+
 body{
     margin:0;
     font-family:sans-serif;
@@ -16,7 +17,7 @@ body{
     overflow-x:hidden;
 }
 
-/* ดาวพื้นหลัง */
+/* ดาว */
 body::before{
     content:"";
     position:fixed;
@@ -41,13 +42,12 @@ body::before{
     margin:40px auto;
     animation:rotateRing 30s linear infinite;
 }
-
 @keyframes rotateRing{
     from{transform:rotate(0deg)}
     to{transform:rotate(360deg)}
 }
 
-/* การ์ด */
+/* ไพ่ */
 .card{
     width:120px;
     height:200px;
@@ -59,7 +59,7 @@ body::before{
     transition:1s;
 }
 
-/* 🔮 วงเวทใต้ไพ่ */
+/* เอฟเฟกต์วงเวท */
 .card::before{
     content:"";
     position:absolute;
@@ -69,40 +69,15 @@ body::before{
     height:160px;
     transform:translate(-50%,-50%);
     border-radius:50%;
-    background:
-        conic-gradient(
-            rgba(147,51,234,0.8),
-            rgba(250,204,21,0.8),
-            rgba(147,51,234,0.8)
-        );
+    background:conic-gradient(#9333ea,#facc15,#9333ea);
     filter:blur(20px);
-    opacity:0.7;
-    animation:magicRotate 6s linear infinite;
-    z-index:-2;
-}
-
-/* ✨ ยันต์เวท */
-.card::after{
-    content:"✦ ✧ ✦";
-    position:absolute;
-    left:50%;
-    top:55%;
-    transform:translate(-50%,-50%);
-    font-size:40px;
-    color:#facc15;
-    opacity:0.8;
-    animation:magicPulse 2s ease-in-out infinite;
+    opacity:0.6;
+    animation:spin 6s linear infinite;
     z-index:-1;
 }
-
-@keyframes magicRotate{
-    from{transform:translate(-50%,-50%) rotate(0deg)}
+@keyframes spin{
+    from{transform:translate(-50%,-50%) rotate(0)}
     to{transform:translate(-50%,-50%) rotate(360deg)}
-}
-
-@keyframes magicPulse{
-    0%,100%{transform:translate(-50%,-50%) scale(1)}
-    50%{transform:translate(-50%,-50%) scale(1.2)}
 }
 
 .inner{
@@ -112,7 +87,6 @@ body::before{
     transition:0.8s;
     position:relative;
 }
-
 .flip{ transform:rotateY(180deg); }
 
 .front,.back{
@@ -123,14 +97,16 @@ body::before{
     backface-visibility:hidden;
     overflow:hidden;
     border:2px solid gold;
-    box-shadow:0 0 20px rgba(250,204,21,0.6);
 }
 
+/* ✅ ใช้ URL เต็ม */
 .front{
-    background:url("13D5B6B3-91B5-4A63-BFEC-C09AF3BDD8BA.png") center/cover no-repeat;
+    background:url("https://nattapong55.github.io/Bow/13D5B6B3-91B5-4A63-BFEC-C09AF3BDD8BA.png") center/cover no-repeat;
 }
 
-.back{ transform:rotateY(180deg); }
+.back{
+    transform:rotateY(180deg);
+}
 
 .back img{
     width:100%;
@@ -138,7 +114,9 @@ body::before{
     object-fit:cover;
 }
 
-.reversed{ transform:rotate(180deg); }
+.reversed{
+    transform:rotate(180deg);
+}
 
 .centerFly{
     position:fixed !important;
@@ -161,33 +139,8 @@ button{
     background:linear-gradient(45deg,#9333ea,#facc15);
     color:white;
     font-size:18px;
-    box-shadow:0 0 20px rgba(147,51,234,0.6);
 }
 
-/* 💥 เอฟเฟกต์ระเบิดตอนเลือก */
-@keyframes shockwave{
-    from{
-        transform:translate(-50%,-50%) scale(0.5);
-        opacity:1;
-    }
-    to{
-        transform:translate(-50%,-50%) scale(3);
-        opacity:0;
-    }
-}
-
-.shock{
-    position:absolute;
-    left:50%;
-    top:50%;
-    width:150px;
-    height:150px;
-    border-radius:50%;
-    border:2px solid #facc15;
-    transform:translate(-50%,-50%);
-    animation:shockwave 0.8s ease-out;
-    pointer-events:none;
-}
 </style>
 </head>
 
@@ -206,6 +159,7 @@ style="padding:10px;border-radius:10px;border:none;">
 
 <script>
 
+/* ไพ่ */
 const deck = [
 "The_Fool.png","The_Magician.png","The_High_Priestess.png",
 "The_Empress.png","The_Emperor.png","The_Lovers.png",
@@ -256,7 +210,9 @@ function start(){
         back.className="back";
 
         const img = document.createElement("img");
-        img.src = name;
+
+        /* 🔥 โหลดจาก GitHub */
+        img.src = "https://nattapong55.github.io/Bow/" + name;
 
         back.appendChild(img);
         inner.appendChild(front);
@@ -274,12 +230,6 @@ function start(){
 function pick(card,inner,name,img){
 
     if(selected>=3) return;
-
-    // shockwave
-    const shock = document.createElement("div");
-    shock.className="shock";
-    card.appendChild(shock);
-    setTimeout(()=>shock.remove(),800);
 
     card.classList.add("centerFly");
     setTimeout(()=>inner.classList.add("flip"),400);
@@ -318,29 +268,11 @@ function generateAI(card){
 
 return `✨ ไพ่ ${card} ได้ปรากฏขึ้นต่อหน้าคุณ ✨
 
-พลังงานของจักรวาลกำลังเคลื่อนไหวรอบตัวคุณในช่วงเวลานี้
-สิ่งที่คุณกำลังเผชิญไม่ใช่เรื่องบังเอิญ
-แต่เป็นเส้นทางที่ถูกกำหนดมาเพื่อให้คุณเติบโต
+พลังงานจักรวาลกำลังเปลี่ยนแปลงรอบตัวคุณ
+ช่วงเวลานี้เป็นจุดสำคัญของชีวิต
 
-ไพ่ใบนี้สะท้อนถึงการเปลี่ยนแปลงภายในจิตใจ
-และโอกาสใหม่ที่กำลังเข้ามาใกล้
-
-คุณอาจรู้สึกสับสนในบางเรื่อง
-แต่ความจริงแล้วคุณกำลังเข้าใกล้คำตอบมากขึ้น
-
-ช่วงเวลานี้ควรใช้สัญชาตญาณมากกว่าเหตุผล
-เพราะพลังงานลึกภายในกำลังนำทางคุณ
-
-ในด้านความรัก ไพ่บอกถึงการพัฒนา
-หรือการเปลี่ยนสถานะบางอย่าง
-
-ด้านการเงิน มีแนวโน้มดีขึ้น
-หากคุณกล้าตัดสินใจ
-
-ด้านอนาคต คุณกำลังเข้าสู่ช่วงสำคัญของชีวิต
-
-สิ่งสำคัญที่สุดคือ
 จงเชื่อมั่นในตัวเอง
+และตัดสินใจด้วยหัวใจ
 
 จักรวาลกำลังสนับสนุนคุณอยู่เสมอ`;
 }
