@@ -159,6 +159,14 @@ button{
     bottom:0;
     transform-origin:bottom center;
 }
+    .card.selected{
+    z-index:20;
+}
+
+.card.selected .inner{
+    transform: translateY(-40px) scale(1.1);
+    transition:0.5s;
+}
 
 @keyframes floatCard{
     0%{transform:translateY(0)}
@@ -262,6 +270,20 @@ button{
 @keyframes float{
     from{transform:translateY(0) scale(1);opacity:1}
     to{transform:translateY(-120px) scale(0.3);opacity:0}
+}
+    @keyframes cardAppear{
+    0%{
+        opacity:0;
+        transform:translateY(80px) scale(0.8);
+    }
+    100%{
+        opacity:1;
+        transform:translateY(0) scale(1);
+    }
+}
+
+.card{
+    animation:cardAppear 0.6s ease forwards;
 }
 
 </style>
@@ -444,6 +466,7 @@ function pick(card,inner,name,img){
     if(selected>=3) return;
 
     flashMagic();
+    card.classList.add("selected");
 
     /* เรียกวงกลมใหม่ */
     circleEffect(card);
