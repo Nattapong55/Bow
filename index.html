@@ -10,10 +10,9 @@
 body{
     margin:0;
     font-family:'Prompt',sans-serif;
-    background: radial-gradient(circle at top,#0d001a,#1a0033,#330066);
+    background: radial-gradient(circle at top,#14002b,#2b0057,#090012);
     color:white;
     text-align:center;
-    overflow-x:hidden;
 }
 
 /* ดาว */
@@ -31,10 +30,7 @@ body{
     to{opacity:1}
 }
 
-.container{
-    padding:20px;
-}
-
+/* ปุ่ม */
 button{
     padding:12px 25px;
     border:none;
@@ -43,36 +39,11 @@ button{
     color:white;
     font-size:18px;
     cursor:pointer;
-    margin:10px;
+    margin:15px;
     box-shadow:0 0 15px #ff99ff;
 }
 
-/* deck */
-.deck{
-    width:120px;
-    height:180px;
-    margin:20px auto;
-    position:relative;
-}
-
-.deck div{
-    position:absolute;
-    inset:0;
-    background:linear-gradient(45deg,#2b004f,#5c0099);
-    border-radius:10px;
-    border:2px solid #c266ff;
-}
-
-.shuffle{
-    animation:shuffle 1s infinite alternate;
-}
-
-@keyframes shuffle{
-    from{transform:translateX(-20px) rotate(-5deg)}
-    to{transform:translateX(20px) rotate(5deg)}
-}
-
-/* cards */
+/* ไพ่ */
 .cards{
     display:flex;
     justify-content:center;
@@ -82,11 +53,10 @@ button{
 }
 
 .card{
-    width:150px;
-    height:240px;
+    width:160px;
+    height:250px;
     perspective:1000px;
     cursor:pointer;
-    box-shadow:0 0 25px #c266ff;
 }
 
 .inner{
@@ -104,42 +74,29 @@ button{
 .front,.back{
     position:absolute;
     inset:0;
-    border-radius:10px;
+    border-radius:12px;
     backface-visibility:hidden;
 }
 
 .front{
-    background:linear-gradient(45deg,#1a0033,#6600cc);
-    border:2px solid #aaa;
+    background:linear-gradient(45deg,#2a004f,#6a00ff);
+    border:2px solid #d0aaff;
+    box-shadow:0 0 20px #c266ff;
 }
 
 .back{
     transform:rotateY(180deg);
     background-size:cover;
     background-position:center;
+    border:2px solid white;
 }
 
-#meaning{
-    margin-top:20px;
+#result{
     max-width:600px;
-    margin-left:auto;
-    margin-right:auto;
+    margin:auto;
+    margin-top:20px;
     line-height:1.6;
     color:#ffd6ff;
-}
-
-/* magic */
-.magic{
-    position:absolute;
-    width:6px;
-    height:6px;
-    background:#ff99ff;
-    border-radius:50%;
-    animation:float 3s linear forwards;
-}
-
-@keyframes float{
-    to{transform:translateY(-200px);opacity:0}
 }
 
 </style>
@@ -147,31 +104,22 @@ button{
 
 <body>
 
-<div class="container">
-
 <h1>🔮 พิธีเปิดไพ่ทาโรต์ 🔮</h1>
+<p>ตั้งจิตอธิษฐาน แล้วเลือกไพ่ 3 ใบ</p>
 
-<p>ตั้งจิตอธิษฐาน แล้วกดเริ่มพิธี</p>
-
-<button onclick="startRitual()">เริ่มพิธี</button>
-
-<div class="deck" id="deck">
-<div></div>
-</div>
+<button onclick="start()">เริ่มพิธี</button>
 
 <div class="cards" id="cards"></div>
 
-<div id="meaning"></div>
+<div id="result"></div>
 
-</div>
-
-<audio id="magicSound">
+<audio id="sound">
 <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_115b9b1d7c.mp3">
 </audio>
 
 <script>
 
-/* ดาว */
+/* ดาวพื้นหลัง */
 for(let i=0;i<120;i++){
     let s=document.createElement("div");
     s.className="star";
@@ -180,9 +128,10 @@ for(let i=0;i<120;i++){
     document.body.appendChild(s);
 }
 
-/* ===== ไพ่ 78 ใบ ===== */
+/* ไพ่ 78 ใบ */
+const tarot = [];
 
-const tarotNames = [
+const names = [
 "The Fool","The Magician","The High Priestess","The Empress","The Emperor",
 "The Hierophant","The Lovers","The Chariot","Strength","The Hermit",
 "Wheel of Fortune","Justice","The Hanged Man","Death","Temperance",
@@ -190,48 +139,46 @@ const tarotNames = [
 "Judgement","The World"
 ];
 
-const suits=["Cups","Pentacles","Swords","Wands"];
-const ranks=["Ace","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Page","Knight","Queen","King"];
-
-suits.forEach(s=>{
-    ranks.forEach(r=>{
-        tarotNames.push(r+" of "+s);
+names.forEach(n=>{
+    tarot.push({
+        name:n,
+        img:`https://source.unsplash.com/300x500/?tarot,${n}`,
+        up:"พลังบวก การเปลี่ยนแปลง โอกาสใหม่",
+        rev:"พลังติดขัด ความลังเล อุปสรรค",
+        love:"ความรักมีบทเรียนสำคัญเกิดขึ้น"
     });
 });
 
-/* ===== ภาพไพ่ (ฝังในโค้ด) ===== */
+const suits=["cups","wands","swords","pentacles"];
+const ranks=["ace","two","three","four","five","six","seven","eight","nine","ten","page","knight","queen","king"];
 
-const tarotImage = "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/RWS_Tarot_00_Fool.jpg/512px-RWS_Tarot_00_Fool.jpg";
+suits.forEach(s=>{
+    ranks.forEach(r=>{
+        tarot.push({
+            name:r+" of "+s,
+            img:`https://source.unsplash.com/300x500/?tarot,card`,
+            up:"สถานการณ์กำลังพัฒนาไปตามเหตุการณ์",
+            rev:"มีความล่าช้า หรือความไม่ชัดเจน",
+            love:"ความสัมพันธ์มีการเปลี่ยนแปลง"
+        });
+    });
+});
 
-/* ===== เริ่มพิธี ===== */
+/* ตัวแปร */
+let picked=[];
 
-function startRitual(){
+/* เริ่ม */
+function start(){
 
-    speak("จงตั้งจิตให้สงบ และเลือกไพ่สามใบ");
+    speak("จงเลือกไพ่สามใบ เพื่อดูอดีต ปัจจุบัน และอนาคต");
 
-    document.getElementById("deck").classList.add("shuffle");
-
-    setTimeout(()=>{
-        document.getElementById("deck").classList.remove("shuffle");
-        createCards();
-    },2000);
-}
-
-/* ===== สร้างไพ่ ===== */
-
-let selected=0;
-
-function createCards(){
-
-    selected=0;
-
-    const container=document.getElementById("cards");
-    container.innerHTML="";
-    document.getElementById("meaning").innerHTML="";
+    const area=document.getElementById("cards");
+    area.innerHTML="";
+    picked=[];
 
     for(let i=0;i<6;i++){
 
-        let name=tarotNames[Math.floor(Math.random()*tarotNames.length)];
+        let index=Math.floor(Math.random()*tarot.length);
 
         let card=document.createElement("div");
         card.className="card";
@@ -240,86 +187,72 @@ function createCards(){
         <div class="inner">
             <div class="front"></div>
             <div class="back"></div>
-        </div>`;
+        </div>
+        `;
 
-        card.onclick=()=>pickCard(card,name);
+        card.onclick=()=>selectCard(card,index);
 
-        container.appendChild(card);
+        area.appendChild(card);
     }
 }
 
-/* ===== เลือก ===== */
+/* เลือกไพ่ */
+function selectCard(card,index){
 
-function pickCard(card,name){
+    if(picked.length>=3) return;
 
-    if(selected>=3) return;
-
-    selected++;
+    document.getElementById("sound").play();
 
     let reversed=Math.random()<0.5;
 
-    reveal(card,name,reversed);
+    card.classList.add("flip");
 
-    if(selected===3){
-        speak("ไพ่ทั้งสามใบได้เปิดเผยแล้ว");
-    }
-}
+    let data=tarot[index];
 
-/* ===== เปิดไพ่ ===== */
-
-function reveal(el,name,reversed){
-
-    document.getElementById("magicSound").play();
-
-    el.classList.add("flip");
-
-    let back=el.querySelector(".back");
-    back.style.backgroundImage=`url(${tarotImage})`;
+    let back=card.querySelector(".back");
+    back.style.backgroundImage=`url('${data.img}')`;
 
     if(reversed){
         back.style.transform="rotateY(180deg) rotate(180deg)";
     }
 
-    let pos=["อดีต","ปัจจุบัน","อนาคต"][selected-1];
+    picked.push({data,reversed});
 
-    let text=`
-    <h3>${pos}</h3>
-    <b>${name}</b> ${reversed?"(กลับหัว)":""}
-    <br><br>
-    ไพ่ใบนี้สะท้อนพลังงานที่กำลังเกิดขึ้นในช่วง${pos}
-    <hr>
-    `;
+    showResult();
 
-    document.getElementById("meaning").innerHTML+=text;
-
-    magic(el);
 }
 
-/* เอฟเฟกต์ */
-function magic(el){
+/* แสดงผล */
+function showResult(){
 
-    for(let i=0;i<15;i++){
+    const pos=["อดีต","ปัจจุบัน","อนาคต"];
 
-        let m=document.createElement("div");
-        m.className="magic";
+    let text="";
 
-        let rect=el.getBoundingClientRect();
+    picked.forEach((p,i)=>{
 
-        m.style.left=rect.left+rect.width/2+"px";
-        m.style.top=rect.top+rect.height/2+"px";
+        text+=`
+        <h3>${pos[i]}</h3>
+        <b>${p.data.name}</b> ${p.reversed?"(กลับหัว)":""}
+        <br>
+        ${p.reversed?p.data.rev:p.data.up}
+        <br>
+        ❤️ ความรัก: ${p.data.love}
+        <hr>
+        `;
+    });
 
-        document.body.appendChild(m);
+    document.getElementById("result").innerHTML=text;
 
-        setTimeout(()=>m.remove(),3000);
-    }
 }
 
-/* เสียง */
-function speak(text){
+/* เสียงหมอดู */
+function speak(t){
 
-    let msg=new SpeechSynthesisUtterance(text);
+    let msg=new SpeechSynthesisUtterance(t);
     msg.lang="th-TH";
     speechSynthesis.speak(msg);
+
 }
 
 </script>
