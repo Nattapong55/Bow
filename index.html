@@ -17,6 +17,42 @@ body{
     overflow-x:hidden;
 }
 
+/* ⭐ ดาวพื้นหลัง */
+.star{
+    position:fixed;
+    width:3px;
+    height:3px;
+    background:white;
+    border-radius:50%;
+    opacity:0.7;
+    animation:twinkle 2s infinite ease-in-out;
+    pointer-events:none;
+}
+
+@keyframes twinkle{
+    0%,100%{opacity:0.2;transform:scale(1)}
+    50%{opacity:1;transform:scale(1.8)}
+}
+
+/* 🔮 วงเวทหมุน */
+.aura{
+    position:fixed;
+    width:600px;
+    height:600px;
+    border-radius:50%;
+    background:radial-gradient(circle,rgba(168,85,247,0.15),transparent 70%);
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    animation:rotateAura 40s linear infinite;
+    pointer-events:none;
+}
+
+@keyframes rotateAura{
+    from{transform:translate(-50%,-50%) rotate(0deg)}
+    to{transform:translate(-50%,-50%) rotate(360deg)}
+}
+
 /* พื้นหลังเวท */
 .magic{
     position:fixed;
@@ -88,7 +124,7 @@ button{
 
 @keyframes floatCard{
     0%{transform:translateY(0)}
-    50%{transform:translateY(-12px)}
+    50%{transform:translateY(-10px)}
     100%{transform:translateY(0)}
 }
 
@@ -120,7 +156,7 @@ button{
     border:2px solid gold;
 }
 
-/* ✅ ปกไพ่ (แก้ชื่อแล้ว) */
+/* ✅ ปกไพ่ */
 .front{
     background:url("13D5B6B3-91B5-4A63-BFEC-C09AF3BDD8BA.png") center/cover no-repeat;
 }
@@ -188,42 +224,6 @@ button{
 @keyframes float{
     from{transform:translateY(0) scale(1);opacity:1}
     to{transform:translateY(-120px) scale(0.3);opacity:0}
-}
-
-/* ⭐ ดาวพื้นหลัง */
-.star{
-    position:fixed;
-    width:3px;
-    height:3px;
-    background:white;
-    border-radius:50%;
-    opacity:0.8;
-    animation:twinkle 2s infinite ease-in-out;
-    pointer-events:none;
-}
-
-@keyframes twinkle{
-    0%,100%{opacity:0.2;transform:scale(1)}
-    50%{opacity:1;transform:scale(1.8)}
-}
-
-/* 🔮 วงเวทหมุน */
-.aura{
-    position:fixed;
-    width:600px;
-    height:600px;
-    border-radius:50%;
-    background:radial-gradient(circle,rgba(168,85,247,0.15),transparent 70%);
-    top:50%;
-    left:50%;
-    transform:translate(-50%,-50%);
-    animation:rotateAura 40s linear infinite;
-    pointer-events:none;
-}
-
-@keyframes rotateAura{
-    from{transform:translate(-50%,-50%) rotate(0deg)}
-    to{transform:translate(-50%,-50%) rotate(360deg)}
 }
 
 </style>
@@ -341,6 +341,19 @@ function start(){
 
 }
 
+/* ⭐ สร้างดาว */
+function createStars(){
+    for(let i=0;i<80;i++){
+        const star=document.createElement("div");
+        star.className="star";
+        star.style.left=Math.random()*100+"%";
+        star.style.top=Math.random()*100+"%";
+        star.style.animationDelay=Math.random()*2+"s";
+        document.body.appendChild(star);
+    }
+}
+createStars();
+
 /* ฝุ่น */
 function createParticles(card){
     for(let i=0;i<12;i++){
@@ -442,19 +455,6 @@ function analyze(){
     document.getElementById("result").innerText = text;
     speakAI(text);
 }
-
-/* ⭐ สร้างดาว */
-function createStars(){
-    for(let i=0;i<70;i++){
-        const star=document.createElement("div");
-        star.className="star";
-        star.style.left=Math.random()*100+"%";
-        star.style.top=Math.random()*100+"%";
-        star.style.animationDelay=Math.random()*2+"s";
-        document.body.appendChild(star);
-    }
-}
-createStars();
 
 </script>
 
