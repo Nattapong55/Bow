@@ -4,110 +4,242 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>🔮 Cosmic Tarot AI</title>
+<title>🔮 Cosmic Tarot AI Ultimate</title>
 
 <style>
+
+/* =============================
+   GLOBAL STYLE
+============================= */
+
 body{
     margin:0;
-    font-family:sans-serif;
-    background: radial-gradient(circle,#2b0a4a,#000);
+    font-family: 'Prompt', sans-serif;
+    background: radial-gradient(circle at center,#3b0764,#020617);
     color:white;
     text-align:center;
+    overflow-x:hidden;
 }
 
-h1{margin-top:20px;}
+h1{
+    margin-top:20px;
+    font-size:32px;
+    text-shadow:0 0 20px #c084fc;
+}
+
+p{
+    opacity:0.9;
+}
+
+/* =============================
+   INPUT
+============================= */
 
 input{
-    padding:12px;
-    border-radius:10px;
+    padding:14px;
+    border-radius:12px;
     border:none;
-    width:250px;
+    width:280px;
+    font-size:16px;
+    outline:none;
 }
 
 button{
-    padding:12px 20px;
+    padding:14px 24px;
     border:none;
-    border-radius:10px;
-    background:#a855f7;
+    border-radius:14px;
+    background:linear-gradient(45deg,#9333ea,#c084fc);
     color:white;
-    font-size:16px;
+    font-size:18px;
     cursor:pointer;
-    margin:10px;
+    margin-top:10px;
+    box-shadow:0 0 20px rgba(192,132,252,0.6);
+    transition:0.3s;
 }
+
+button:hover{
+    transform:scale(1.05);
+}
+
+/* =============================
+   CARD AREA
+============================= */
 
 #cards{
     display:flex;
     justify-content:center;
     flex-wrap:wrap;
-    gap:20px;
-    margin-top:30px;
+    gap:25px;
+    margin-top:40px;
 }
 
 .card{
-    width:160px;
-    height:260px;
+    width:150px;
+    height:250px;
+    perspective:1000px;
     cursor:pointer;
-    transition:0.6s;
 }
 
-.card img{
+.inner{
+    width:100%;
+    height:100%;
+    position:relative;
+    transform-style:preserve-3d;
+    transition:0.8s;
+}
+
+.flip{
+    transform:rotateY(180deg);
+}
+
+.front, .back{
+    position:absolute;
+    width:100%;
+    height:100%;
+    border-radius:15px;
+    backface-visibility:hidden;
+    box-shadow:0 0 25px rgba(168,85,247,0.8);
+}
+
+.front{
+    background:linear-gradient(#6d28d9,#312e81);
+}
+
+.back{
+    transform:rotateY(180deg);
+}
+
+.back img{
     width:100%;
     height:100%;
     border-radius:15px;
 }
 
+/* =============================
+   REVERSED
+============================= */
+
 .reversed{
     transform: rotate(180deg);
 }
 
-.result{
-    margin-top:20px;
+/* =============================
+   RESULT
+============================= */
+
+#result{
+    max-width:700px;
+    margin:30px auto;
     padding:20px;
-    max-width:600px;
-    margin-left:auto;
-    margin-right:auto;
+    border-radius:15px;
+    background:rgba(0,0,0,0.4);
+    box-shadow:0 0 20px rgba(192,132,252,0.4);
 }
+
+/* =============================
+   SHUFFLE ANIMATION
+============================= */
+
+@keyframes shuffle{
+    0%{transform:translateY(0)}
+    50%{transform:translateY(-20px)}
+    100%{transform:translateY(0)}
+}
+
+.shuffle{
+    animation:shuffle 0.6s infinite;
+}
+
+/* =============================
+   GLOW
+============================= */
+
+.glow{
+    box-shadow:0 0 40px #c084fc;
+}
+
+/* =============================
+   STAR BACKGROUND
+============================= */
+
+.stars{
+    position:fixed;
+    width:100%;
+    height:100%;
+    top:0;
+    left:0;
+    z-index:-1;
+    background:url('https://i.imgur.com/YKY28eT.png');
+    opacity:0.3;
+}
+
 </style>
 </head>
 
 <body>
 
+<div class="stars"></div>
+
 <h1>🔮 ไพ่ทาโรต์จักรวาล AI 🔮</h1>
 
-<p>พิมพ์คำถามของคุณ</p>
+<p>พิมพ์คำถาม แล้วเลือกไพ่ 3 ใบ</p>
 
-<input id="question" placeholder="เช่น ความรักจะเป็นยังไง">
+<input id="question" placeholder="เช่น ความรักของฉันจะเป็นยังไง">
 <br>
-<button onclick="start()">เริ่มดูไพ่</button>
+<button onclick="start()">เริ่มพิธีเปิดไพ่</button>
 
 <div id="cards"></div>
 
-<div class="result" id="result"></div>
+<div id="result"></div>
 
 <script>
 
-const tarotCards = [
-"The_Fool.png","The_Magician.png","The_High_Priestess.png",
-"The_Empress.png","The_Emperor.png","The_Lovers.png",
-"The_Chariot.png","Strength.png","The_Hermit.png",
-"Wheel_of_Fortune.png","Justice.png","The_Hanged_Man.png",
-"Death.png","Temperance.png","The_Devil.png","The_Tower.png",
-"The_Star.png","The_Moon.png","The_Sun.png","Judgement.png","The_World.png"
+/* =============================
+   TAROT DECK (ใช้ไฟล์ภาพเดิม)
+============================= */
+
+const deck = [
+"The_Fool.png","The_Magician.png","The_High_Priestess.png","The_Empress.png",
+"The_Emperor.png","The_Hierophant.png","The_Lovers.png","The_Chariot.png",
+"Strength.png","The_Hermit.png","Wheel_of_Fortune.png","Justice.png",
+"The_Hanged_Man.png","Death.png","Temperance.png","The_Devil.png",
+"The_Tower.png","The_Star.png","The_Moon.png","The_Sun.png",
+"Judgement.png","The_World.png"
 ];
 
+/* =============================
+   MEANINGS (ตัวอย่าง — เพิ่มได้)
+============================= */
+
 const meanings = {
-"The_Fool":"การเริ่มต้นใหม่ การผจญภัย",
-"The_Lovers":"ความรัก ความสัมพันธ์ การตัดสินใจ",
-"The_Sun":"ความสำเร็จ ความสุข",
-"The_Tower":"การเปลี่ยนแปลงฉับพลัน",
-"The_Star":"ความหวัง การเยียวยา",
-"The_Moon":"ความไม่แน่นอน ความกังวล",
-"The_World":"ความสำเร็จสมบูรณ์",
-"Death":"การเปลี่ยนแปลงครั้งใหญ่",
-"Strength":"พลังใจ ความอดทน"
+"The_Fool":{
+up:"การเริ่มต้นใหม่ โอกาสใหม่",
+rev:"ความลังเล ความไม่พร้อม"
+},
+"The_Lovers":{
+up:"ความรัก ความสัมพันธ์",
+rev:"ความขัดแย้ง การตัดสินใจผิด"
+},
+"The_Sun":{
+up:"ความสำเร็จ ความสุข",
+rev:"ความล่าช้า ความไม่มั่นใจ"
+},
+"Death":{
+up:"การเปลี่ยนแปลงครั้งใหญ่",
+rev:"การยึดติดอดีต"
+}
 };
 
+/* =============================
+   GLOBAL STATE
+============================= */
+
 let selected = 0;
+let chosen = [];
+
+/* =============================
+   VOICE
+============================= */
 
 function speak(text){
 
@@ -117,39 +249,64 @@ function speak(text){
 
 }
 
+/* =============================
+   START
+============================= */
+
 function start(){
 
-    document.getElementById("cards").innerHTML="";
-    document.getElementById("result").innerHTML="";
     selected=0;
+    chosen=[];
+    document.getElementById("result").innerHTML="";
 
-    let deck = tarotCards.sort(()=>Math.random()-0.5).slice(0,6);
+    const cardsDiv = document.getElementById("cards");
+    cardsDiv.innerHTML="";
 
-    deck.forEach(cardName=>{
+    let shuffled=[...deck].sort(()=>Math.random()-0.5).slice(0,6);
 
-        let card=document.createElement("div");
-        card.className="card";
+    shuffled.forEach(name=>{
 
-        let img=document.createElement("img");
-        img.src=cardName;
+        const card=document.createElement("div");
+        card.className="card shuffle";
 
-        card.appendChild(img);
+        const inner=document.createElement("div");
+        inner.className="inner";
 
-        card.onclick=()=>selectCard(cardName,img);
+        const front=document.createElement("div");
+        front.className="front";
 
-        document.getElementById("cards").appendChild(card);
+        const back=document.createElement("div");
+        back.className="back";
+
+        const img=document.createElement("img");
+        img.src=name;
+
+        back.appendChild(img);
+        inner.appendChild(front);
+        inner.appendChild(back);
+        card.appendChild(inner);
+
+        card.onclick=()=>pickCard(inner,name,img);
+
+        cardsDiv.appendChild(card);
+
+        setTimeout(()=>card.classList.remove("shuffle"),1000);
 
     });
 
 }
 
-let chosen=[];
+/* =============================
+   PICK CARD
+============================= */
 
-function selectCard(name,img){
+function pickCard(inner,name,img){
 
     if(selected>=3) return;
 
     selected++;
+
+    inner.classList.add("flip");
 
     let reversed = Math.random()<0.5;
 
@@ -163,35 +320,60 @@ function selectCard(name,img){
     });
 
     if(selected===3){
-        analyze();
+        setTimeout(analyze,1000);
     }
 
 }
 
+/* =============================
+   AI ANALYSIS
+============================= */
+
 function analyze(){
 
-    let question=document.getElementById("question").value;
+    const question=document.getElementById("question").value || "คำถามชีวิต";
 
-    let text="🔮 ผลการทำนาย\n\n";
+    let text="🔮 ผลการเปิดไพ่ 🔮\n\n";
 
-    chosen.forEach(c=>{
-        text += "ไพ่ "+c.name+(c.reversed?" (กลับหัว)":"")+"\n";
+    const positions=["อดีต","ปัจจุบัน","อนาคต"];
+
+    chosen.forEach((c,i)=>{
+
+        let meaning="";
+
+        if(meanings[c.name]){
+            meaning = c.reversed ? meanings[c.name].rev : meanings[c.name].up;
+        }else{
+            meaning="พลังงานกำลังเปลี่ยนแปลง";
+        }
+
+        text += positions[i]+" : "+c.name+(c.reversed?" (กลับหัว)":"")+"\n";
+        text += "→ "+meaning+"\n\n";
+
     });
 
-    text += "\nคำทำนาย:\n";
+    /* วิเคราะห์ AI ตามคำถาม */
 
-    // AI วิเคราะห์ง่าย
+    let ai="";
+
     if(question.includes("รัก")){
-        text += "ความรักกำลังมีการเปลี่ยนแปลงไปในทางที่ดี จงเปิดใจและสื่อสาร";
-    }else if(question.includes("งาน")){
-        text += "งานมีโอกาสใหม่เข้ามา แต่ต้องตัดสินใจอย่างรอบคอบ";
-    }else{
-        text += "ชีวิตกำลังเข้าสู่ช่วงเปลี่ยนแปลงสำคัญ โอกาสใหม่กำลังมา";
+        ai="ความรักมีแนวโน้มพัฒนาไปในทางที่ดี แต่ต้องสื่อสารกันมากขึ้น";
     }
+    else if(question.includes("งาน")){
+        ai="งานกำลังมีโอกาสใหม่เข้ามา แต่ต้องกล้าตัดสินใจ";
+    }
+    else if(question.includes("เงิน")){
+        ai="การเงินต้องวางแผนให้รอบคอบ โอกาสกำลังมา";
+    }
+    else{
+        ai="ชีวิตกำลังเข้าสู่ช่วงเปลี่ยนแปลงสำคัญ จงเชื่อสัญชาตญาณ";
+    }
+
+    text += "🧠 AI วิเคราะห์:\n"+ai;
 
     document.getElementById("result").innerText=text;
 
-    speak(text); // 🔊 เสียงหมอดูพูด
+    speak(text);
 
 }
 
