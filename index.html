@@ -16,6 +16,18 @@ body{
     text-align:center;
     overflow-x:hidden;
 }
+    /* ===== ครึ่งวงกลม ===== */
+.cardsSemi{
+    position:relative;
+    height:260px;
+}
+
+.cardsSemi .card{
+    position:absolute;
+    left:50%;
+    bottom:0;
+    transform-origin:bottom center;
+}
 
 /* ⭐ ดาวพื้นหลัง */
 .star{
@@ -133,10 +145,8 @@ button{
 
 /* ไพ่ */
 #cards{
-    display:flex;
-    justify-content:center;
-    flex-wrap:wrap;
-    gap:20px;
+    position:relative;
+    height:260px;
     margin-top:30px;
 }
 
@@ -144,8 +154,10 @@ button{
     width:140px;
     height:230px;
     perspective:1000px;
-    position:relative;
-    animation:floatCard 4s ease-in-out infinite;
+    position:absolute;
+    left:50%;
+    bottom:0;
+    transform-origin:bottom center;
 }
 
 @keyframes floatCard{
@@ -327,6 +339,30 @@ function circleEffect(card){
 
     setTimeout(()=>circle.remove(),1200);
 }
+    function arrangeSemiCircle(){
+
+    const cardsDiv = document.getElementById("cards");
+    const cards = cardsDiv.querySelectorAll(".card");
+
+    cardsDiv.classList.add("cardsSemi");
+
+    const total = cards.length;
+    const spread = 120;
+    const radius = 260;
+
+    cards.forEach((card,i)=>{
+
+        const angle = (-spread/2) + (spread/(total-1))*i;
+        const rad = angle * Math.PI/180;
+
+        const x = Math.sin(rad) * radius;
+        const y = Math.cos(rad) * radius;
+
+        card.style.transform =
+            `translate(-50%,0) translate(${x}px,${-y+radius}px) rotate(${angle}deg)`;
+
+    });
+}
 
 function start(){
 
@@ -372,6 +408,7 @@ function start(){
             cardsDiv.appendChild(card);
 
         });
+        setTimeout(arrangeSemiCircle,50);
 
     },1200);
 
