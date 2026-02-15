@@ -152,14 +152,6 @@ style="padding:10px;border-radius:10px;border:none;">
 <script>
 
 /* =====================
-   เสียง
-===================== */
-
-const shuffleSound = new Audio("shuffle.wav");
-const flipSound = new Audio("flip.wav");
-const windSound = new Audio("wind.mp3");
-
-/* =====================
    ไพ่
 ===================== */
 
@@ -187,7 +179,7 @@ function flashMagic(){
 }
 
 /* =====================
-   AI Voice ฟรี
+   AI Voice (ยังอยู่)
 ===================== */
 
 function speakAI(text){
@@ -225,8 +217,6 @@ function hideLoading(){
 function start(){
 
     speakAI("กำลังสับไพ่ โปรดตั้งสมาธิ");
-
-    shuffleSound.play();
 
     selected = 0;
     chosen = [];
@@ -282,7 +272,6 @@ function pick(inner,name,img){
 
     if(selected>=3) return;
 
-    flipSound.play();
     flashMagic();
 
     inner.classList.add("flip");
@@ -306,8 +295,6 @@ function pick(inner,name,img){
 
             showLoading("กำลังอ่านพลังงานจักรวาล...");
             speakAI("ฉันกำลังเชื่อมต่อพลังงานของจักรวาล");
-
-            windSound.play();
 
             setTimeout(()=>{
                 hideLoading();
