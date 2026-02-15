@@ -3,151 +3,148 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ไพ่ดูดวงความรัก 🔮</title>
+<title>Tarot Reading 🔮</title>
 
 <style>
 
 body{
     margin:0;
-    height:100vh;
-    overflow:hidden;
     font-family:'Prompt',sans-serif;
-    background: radial-gradient(circle at top,#140028,#2a004d,#4b0082);
+    background: radial-gradient(circle at top,#0d001a,#1a0033,#330066);
     color:white;
+    text-align:center;
+    overflow-x:hidden;
 }
 
 /* ดาว */
 .star{
     position:absolute;
-    width:3px;
-    height:3px;
+    width:2px;
+    height:2px;
     background:white;
     border-radius:50%;
     animation:twinkle 2s infinite alternate;
 }
 
 @keyframes twinkle{
-    from{opacity:.2;}
-    to{opacity:1;}
+    from{opacity:.2}
+    to{opacity:1}
 }
 
 /* container */
 .container{
-    text-align:center;
-    position:relative;
-    top:50%;
-    transform:translateY(-50%);
+    padding:20px;
 }
 
-h1{
-    color:#ffd6ff;
-    text-shadow:0 0 20px #ff66ff,0 0 40px #ff99ff;
+button{
+    padding:12px 25px;
+    border:none;
+    border-radius:25px;
+    background:linear-gradient(45deg,#7b2cff,#ff4fd8);
+    color:white;
+    font-size:18px;
+    cursor:pointer;
+    margin:10px;
+    box-shadow:0 0 15px #ff99ff;
+}
+
+/* deck animation */
+.deck{
+    width:120px;
+    height:180px;
+    margin:20px auto;
+    position:relative;
+}
+
+.deck div{
+    position:absolute;
+    inset:0;
+    background:#222;
+    border-radius:10px;
+    border:2px solid #c266ff;
+}
+
+.shuffle{
+    animation:shuffle 1s infinite alternate;
+}
+
+@keyframes shuffle{
+    from{transform:translateX(-20px) rotate(-5deg)}
+    to{transform:translateX(20px) rotate(5deg)}
 }
 
 /* cards */
 .cards{
     display:flex;
     justify-content:center;
-    gap:30px;
+    gap:20px;
+    flex-wrap:wrap;
     margin-top:30px;
 }
 
 .card{
-    width:160px;
+    width:150px;
     height:240px;
     perspective:1000px;
     cursor:pointer;
 }
 
-.card-inner{
+.inner{
     width:100%;
     height:100%;
     position:relative;
     transform-style:preserve-3d;
-    transition:transform 1s;
+    transition:1s;
 }
 
-.card.flip .card-inner{
+.card.flip .inner{
     transform:rotateY(180deg);
 }
 
-.card-front,
-.card-back{
+.front,.back{
     position:absolute;
     inset:0;
-    border-radius:15px;
+    border-radius:10px;
     backface-visibility:hidden;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:15px;
 }
 
-.card-front{
-    background:linear-gradient(45deg,#5a00a3,#c266ff);
-    font-size:40px;
-    box-shadow:0 0 20px #c266ff,0 0 40px #ff99ff;
-    animation:glow 2s infinite alternate;
+.front{
+    background:#111;
+    border:2px solid #aaa;
 }
 
-.card-back{
-    background:linear-gradient(45deg,#ff99cc,#ffd6ff);
+.back{
     transform:rotateY(180deg);
-    color:#330033;
-    font-size:15px;
+    background-size:cover;
+    background-position:center;
 }
 
-@keyframes glow{
-    from{box-shadow:0 0 10px #c266ff;}
-    to{box-shadow:0 0 30px #ff99ff;}
+.card{
+    box-shadow:0 0 20px #c266ff;
 }
 
-/* popup */
-#popup{
-    display:none;
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.85);
-    justify-content:center;
-    align-items:center;
-    flex-direction:column;
-    animation:fadeIn 1s;
+/* meaning */
+#meaning{
+    margin-top:20px;
+    max-width:600px;
+    margin-left:auto;
+    margin-right:auto;
+    line-height:1.6;
+    color:#ffd6ff;
 }
 
-@keyframes fadeIn{
-    from{opacity:0;}
-    to{opacity:1;}
-}
-
-#popup h1{
-    font-size:40px;
-    color:#ffccff;
-    text-shadow:0 0 20px pink,0 0 40px hotpink;
-    animation:pulse 1.5s infinite;
-}
-
-@keyframes pulse{
-    0%{transform:scale(1);}
-    50%{transform:scale(1.1);}
-    100%{transform:scale(1);}
-}
-
-/* magic particles */
+/* glow particles */
 .magic{
     position:absolute;
     width:6px;
     height:6px;
     background:#ff99ff;
     border-radius:50%;
-    pointer-events:none;
     animation:float 3s linear forwards;
 }
 
 @keyframes float{
-    to{
-        transform:translateY(-200px) scale(0);
-        opacity:0;
-    }
+    to{transform:translateY(-200px);opacity:0}
 }
 
 </style>
@@ -158,47 +155,30 @@ h1{
 <div id="stars"></div>
 
 <div class="container">
-    <h1>🔮 เปิดไพ่ทำนายความรัก 🔮</h1>
-    <p>เลือกไพ่ 3 ใบ เพื่อดู อดีต • ปัจจุบัน • อนาคต</p>
 
-    <div class="cards">
+<h1>🔮 พิธีเปิดไพ่ทาโรต์ 🔮</h1>
 
-        <div class="card" onclick="openCard(this,0)">
-            <div class="card-inner">
-                <div class="card-front">✨</div>
-                <div class="card-back" id="card0">อดีต</div>
-            </div>
-        </div>
+<p id="guide">ตั้งจิตอธิษฐานถึงคำถามของคุณ แล้วกดเริ่มพิธี</p>
 
-        <div class="card" onclick="openCard(this,1)">
-            <div class="card-inner">
-                <div class="card-front">✨</div>
-                <div class="card-back" id="card1">ปัจจุบัน</div>
-            </div>
-        </div>
+<button onclick="startRitual()">เริ่มพิธี</button>
 
-        <div class="card" onclick="openCard(this,2)">
-            <div class="card-inner">
-                <div class="card-front">✨</div>
-                <div class="card-back" id="card2">อนาคต</div>
-            </div>
-        </div>
-
-    </div>
+<div class="deck" id="deck">
+<div></div>
 </div>
 
-<div id="popup">
-    <h1>💖 เป็นแฟนกันนะ 💖</h1>
+<div class="cards" id="cards"></div>
+
+<div id="meaning"></div>
+
 </div>
 
-<!-- เสียง -->
 <audio id="magicSound">
-<source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_115b9b1d7c.mp3?filename=magic-3-11231.mp3">
+<source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_115b9b1d7c.mp3">
 </audio>
 
 <script>
 
-/* ดาวพื้นหลัง */
+/* ===== สร้างดาว ===== */
 for(let i=0;i<120;i++){
     let s=document.createElement("div");
     s.className="star";
@@ -207,41 +187,135 @@ for(let i=0;i<120;i++){
     document.body.appendChild(s);
 }
 
-/* คำทำนาย */
-const texts=[
-"อดีต : เราสองคนถูกโชคชะตาพามาเจอกัน",
-"ปัจจุบัน : มีคนคนหนึ่งรักคุณมากกว่าที่คุณคิด",
-"อนาคต : ความรักครั้งนี้กำลังจะชัดเจนขึ้น ❤️"
+/* ===== ไพ่ 78 ใบ ===== */
+
+const tarot = [];
+
+/* Major Arcana */
+const majorNames = [
+"The Fool","The Magician","The High Priestess","The Empress","The Emperor",
+"The Hierophant","The Lovers","The Chariot","Strength","The Hermit",
+"Wheel of Fortune","Justice","The Hanged Man","Death","Temperance",
+"The Devil","The Tower","The Star","The Moon","The Sun",
+"Judgement","The World"
 ];
 
-let opened=[false,false,false];
-let count=0;
+majorNames.forEach((name,i)=>{
+    tarot.push({
+        name,
+        img:`https://raw.githubusercontent.com/ekelen/tarot-api/master/static/cards/${name.toLowerCase().replace(/ /g,"_")}.jpg`,
+        meaning:"พลังงานสำคัญของชีวิต การเปลี่ยนแปลง และบทเรียนทางจิตวิญญาณ"
+    });
+});
 
-function openCard(el,i){
+/* Minor Arcana */
+const suits=["cups","pentacles","swords","wands"];
+const ranks=["ace","two","three","four","five","six","seven","eight","nine","ten","page","knight","queen","king"];
 
-    if(opened[i]) return;
+suits.forEach(suit=>{
+    ranks.forEach(rank=>{
+        tarot.push({
+            name:rank+" of "+suit,
+            img:`https://raw.githubusercontent.com/ekelen/tarot-api/master/static/cards/${rank}_of_${suit}.jpg`,
+            meaning:"เหตุการณ์ในชีวิตประจำวัน อารมณ์ การงาน และความสัมพันธ์"
+        });
+    });
+});
+
+/* ===== ตัวแปร ===== */
+let selected=[];
+
+/* ===== เริ่มพิธี ===== */
+function startRitual(){
+
+    speak("จงตั้งจิตให้สงบ และเลือกไพ่สามใบ เพื่อเปิดเผยอดีต ปัจจุบัน และอนาคต");
+
+    document.getElementById("deck").classList.add("shuffle");
+
+    setTimeout(()=>{
+        document.getElementById("deck").classList.remove("shuffle");
+        createCards();
+    },2000);
+}
+
+/* ===== สร้างไพ่ให้เลือก ===== */
+function createCards(){
+
+    const container=document.getElementById("cards");
+    container.innerHTML="";
+    selected=[];
+
+    for(let i=0;i<6;i++){
+
+        let index=Math.floor(Math.random()*tarot.length);
+
+        let card=document.createElement("div");
+        card.className="card";
+
+        card.innerHTML=`
+        <div class="inner">
+            <div class="front"></div>
+            <div class="back"></div>
+        </div>`;
+
+        card.onclick=()=>pickCard(card,index);
+
+        container.appendChild(card);
+    }
+}
+
+/* ===== เลือกไพ่ ===== */
+function pickCard(card,index){
+
+    if(selected.length>=3) return;
+
+    let reversed=Math.random()<0.5;
+
+    selected.push({index,reversed,card});
+
+    revealCard(card,index,reversed);
+
+    if(selected.length===3){
+        speak("ไพ่ทั้งสามใบได้เปิดเผยแล้ว");
+    }
+}
+
+/* ===== เปิดไพ่ ===== */
+function revealCard(el,index,reversed){
 
     document.getElementById("magicSound").play();
 
     el.classList.add("flip");
-    document.getElementById("card"+i).innerHTML=texts[i];
 
-    opened[i]=true;
-    count++;
+    let data=tarot[index];
 
-    magicEffect(el);
+    let back=el.querySelector(".back");
+    back.style.backgroundImage=`url('${data.img}')`;
 
-    if(count===3){
-        setTimeout(()=>{
-            document.getElementById("popup").style.display="flex";
-        },1500);
+    if(reversed){
+        back.style.transform="rotateY(180deg) rotate(180deg)";
     }
+
+    let pos=["อดีต","ปัจจุบัน","อนาคต"][selected.length-1];
+
+    let text=`
+    <h3>${pos}</h3>
+    <b>${data.name}</b> ${reversed?"(กลับหัว)":""}
+    <br><br>
+    ${data.meaning}
+    <br><br>
+    ไพ่ใบนี้สะท้อนพลังงานที่กำลังเกิดขึ้นในช่วง${pos}
+    `;
+
+    document.getElementById("meaning").innerHTML+=text+"<hr>";
+
+    magic(el);
 }
 
-/* เอฟเฟกต์เวทมนตร์ */
-function magicEffect(el){
+/* ===== เอฟเฟกต์ ===== */
+function magic(el){
 
-    for(let i=0;i<20;i++){
+    for(let i=0;i<15;i++){
 
         let m=document.createElement("div");
         m.className="magic";
@@ -255,6 +329,14 @@ function magicEffect(el){
 
         setTimeout(()=>m.remove(),3000);
     }
+}
+
+/* ===== เสียงหมอดู ===== */
+function speak(text){
+
+    let msg=new SpeechSynthesisUtterance(text);
+    msg.lang="th-TH";
+    speechSynthesis.speak(msg);
 }
 
 </script>
