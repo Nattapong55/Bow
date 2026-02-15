@@ -16,8 +16,7 @@ body{
     text-align:center;
 }
 
-/* เวทพื้นหลัง */
-
+/* พื้นหลังเวท */
 .magic{
     position:fixed;
     width:100%;
@@ -30,7 +29,6 @@ body{
 .magic.show{opacity:1;}
 
 /* Loading */
-
 .loading{
     position:fixed;
     top:0;
@@ -71,7 +69,6 @@ button{
 }
 
 /* ไพ่ */
-
 #cards{
     display:flex;
     justify-content:center;
@@ -84,6 +81,7 @@ button{
     width:140px;
     height:230px;
     perspective:1000px;
+    position:relative;
 }
 
 .inner{
@@ -92,20 +90,6 @@ button{
     transform-style:preserve-3d;
     transition:0.8s;
     position:relative;
-}
-
-/* ไพ่สั่นก่อนเปิด */
-
-.shake{
-    animation:shake 0.4s;
-}
-
-@keyframes shake{
-    0%{transform:translateX(0)}
-    25%{transform:translateX(-4px)}
-    50%{transform:translateX(4px)}
-    75%{transform:translateX(-4px)}
-    100%{transform:translateX(0)}
 }
 
 .flip{ transform:rotateY(180deg); }
@@ -120,10 +104,12 @@ button{
     border:2px solid gold;
 }
 
+/* ✅ ปกไพ่ (แก้ชื่อแล้ว) */
 .front{
-    background:url("card-back.png") center/cover;
+    background:url("13D5B6B3-91B5-4A63-BFEC-C09AF3BDD8BA.png") center/cover no-repeat;
 }
 
+/* ไพ่จริง */
 .back{
     transform:rotateY(180deg);
 }
@@ -138,45 +124,54 @@ button{
     transform:rotate(180deg);
 }
 
-/* ✨ เรืองแสง + ขอบวิ่ง */
-
+/* ✨ เรืองแสง */
 .glow{
-    animation: glowRun 1.5s linear infinite;
+    box-shadow:
+        0 0 20px gold,
+        0 0 40px #a855f7,
+        0 0 70px #9333ea;
 }
 
-@keyframes glowRun{
-    0%{
-        box-shadow:0 0 10px gold;
-    }
-    50%{
-        box-shadow:0 0 30px #a855f7;
-    }
-    100%{
-        box-shadow:0 0 10px gold;
-    }
+/* ✨ ไพ่สั่น */
+@keyframes shake{
+    0%{transform:translate(0,0)}
+    25%{transform:translate(2px,-2px)}
+    50%{transform:translate(-2px,2px)}
+    75%{transform:translate(2px,2px)}
+    100%{transform:translate(0,0)}
+}
+.shake{
+    animation:shake 0.4s infinite;
+}
+
+/* ✨ แสงวิ่งรอบ */
+.lightRun{
+    position:absolute;
+    inset:-3px;
+    border-radius:14px;
+    pointer-events:none;
+    background:linear-gradient(90deg,transparent,gold,transparent);
+    background-size:200%;
+    animation:run 1.2s linear infinite;
+}
+@keyframes run{
+    from{background-position:0%}
+    to{background-position:200%}
 }
 
 /* ✨ ฝุ่นวิญญาณ */
-
 .particle{
     position:absolute;
     width:6px;
     height:6px;
-    background:radial-gradient(circle,white,#a855f7);
+    background:#c084fc;
     border-radius:50%;
-    pointer-events:none;
-    animation:float 2s linear forwards;
+    opacity:0.8;
+    animation:float 2s linear infinite;
 }
-
 @keyframes float{
-    from{
-        opacity:1;
-        transform:translateY(0) scale(1);
-    }
-    to{
-        opacity:0;
-        transform:translateY(-80px) scale(0.5);
-    }
+    from{transform:translateY(0) scale(1);opacity:1}
+    to{transform:translateY(-120px) scale(0.3);opacity:0}
 }
 
 </style>
@@ -218,33 +213,11 @@ const deck = [
 let selected = 0;
 let chosen = [];
 
-/* เอฟเฟกต์เวท */
-
 function flashMagic(){
     const m = document.getElementById("magic");
     m.classList.add("show");
     setTimeout(()=>m.classList.remove("show"),1000);
 }
-
-/* ฝุ่นวิญญาณ */
-
-function createParticles(el){
-
-    for(let i=0;i<12;i++){
-
-        const p = document.createElement("div");
-        p.className="particle";
-
-        p.style.left = Math.random()*100+"%";
-        p.style.top = Math.random()*100+"%";
-
-        el.appendChild(p);
-
-        setTimeout(()=>p.remove(),2000);
-    }
-}
-
-/* AI Voice */
 
 function speakAI(text){
     const speech = new SpeechSynthesisUtterance(text);
@@ -254,8 +227,6 @@ function speakAI(text){
     speechSynthesis.cancel();
     speechSynthesis.speak(speech);
 }
-
-/* Loading */
 
 function showLoading(text){
     const load = document.getElementById("loading");
@@ -267,8 +238,6 @@ function hideLoading(){
     document.getElementById("loading").style.display = "none";
 }
 
-/* เริ่ม */
-
 function start(){
 
     speakAI("กำลังสับไพ่ โปรดตั้งสมาธิ");
@@ -277,7 +246,6 @@ function start(){
     chosen = [];
 
     document.getElementById("result").innerHTML = "";
-
     const cardsDiv = document.getElementById("cards");
     cardsDiv.innerHTML = "";
 
@@ -309,7 +277,7 @@ function start(){
             inner.appendChild(back);
             card.appendChild(inner);
 
-            card.onclick=()=>pick(inner,name,img);
+            card.onclick=()=>pick(card,inner,name,img);
 
             cardsDiv.appendChild(card);
 
@@ -319,28 +287,40 @@ function start(){
 
 }
 
-/* เลือกไพ่ */
+/* ฝุ่น */
+function createParticles(card){
+    for(let i=0;i<12;i++){
+        const p=document.createElement("div");
+        p.className="particle";
+        p.style.left=Math.random()*100+"%";
+        p.style.bottom="0px";
+        card.appendChild(p);
+        setTimeout(()=>p.remove(),2000);
+    }
+}
 
-function pick(inner,name,img){
+function pick(card,inner,name,img){
 
     if(selected>=3) return;
 
     flashMagic();
 
-    inner.classList.add("shake");
-    inner.classList.add("glow");
+    inner.classList.add("glow","shake");
 
-    createParticles(inner);
+    const light=document.createElement("div");
+    light.className="lightRun";
+    card.appendChild(light);
+
+    createParticles(card);
 
     setTimeout(()=>{
+        inner.classList.remove("shake");
         inner.classList.add("flip");
-    },400);
+        light.remove();
+    },600);
 
     let reversed = Math.random()<0.5;
-
-    if(reversed){
-        img.classList.add("reversed");
-    }
+    if(reversed) img.classList.add("reversed");
 
     chosen.push({
         name:name.replace(".png","").replaceAll("_"," "),
@@ -350,25 +330,18 @@ function pick(inner,name,img){
     selected++;
 
     if(selected===3){
-
         setTimeout(()=>{
-
             showLoading("กำลังอ่านพลังงานจักรวาล...");
             speakAI("ฉันกำลังเชื่อมต่อพลังงานของจักรวาล");
 
-            requestAnimationFrame(()=>{
-                setTimeout(()=>{
-                    hideLoading();
-                    analyze();
-                },2500);
-            });
+            setTimeout(()=>{
+                hideLoading();
+                analyze();
+            },2500);
 
         },1000);
-
     }
 }
-
-/* AI */
 
 function generateAI(card){
 
@@ -401,12 +374,9 @@ return `✨ ไพ่ ${card} ได้ปรากฏขึ้นต่อห�
 จักรวาลกำลังสนับสนุนคุณอยู่เสมอ`;
 }
 
-/* วิเคราะห์ */
-
 function analyze(){
 
     let text = "🔮 ผลการเปิดไพ่ 🔮\n\n";
-
     const pos = ["อดีต","ปัจจุบัน","อนาคต"];
 
     chosen.forEach((c,i)=>{
@@ -416,7 +386,6 @@ function analyze(){
     text += "\n"+generateAI(chosen[0].name);
 
     document.getElementById("result").innerText = text;
-
     speakAI(text);
 }
 
