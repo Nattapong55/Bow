@@ -14,74 +14,59 @@ body{
     background: radial-gradient(circle,#3b0764,#020617);
     color:white;
     text-align:center;
+    overflow-x:hidden;
 }
 
-/* พื้นหลังเวท */
-.magic{
+/* ⭐ ดาว */
+body::before{
+    content:"";
     position:fixed;
-    width:100%;
-    height:100%;
-    background: radial-gradient(circle, rgba(168,85,247,0.4) 0%, transparent 60%);
-    opacity:0;
-    transition:1s;
-    pointer-events:none;
+    inset:0;
+    background-image:
+        radial-gradient(2px 2px at 20% 30%,#fff,transparent),
+        radial-gradient(2px 2px at 70% 60%,#fff,transparent),
+        radial-gradient(1px 1px at 40% 80%,#fff,transparent);
+    opacity:0.3;
+    animation:stars 8s linear infinite;
 }
-.magic.show{opacity:1;}
-
-/* Loading */
-.loading{
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background:rgba(0,0,0,0.85);
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    flex-direction:column;
-    font-size:22px;
-    z-index:9999;
-    display:none;
+@keyframes stars{
+    from{transform:translateY(0)}
+    to{transform:translateY(-40px)}
 }
 
-.spinner{
-    width:60px;
-    height:60px;
-    border:5px solid #9333ea;
-    border-top:5px solid transparent;
-    border-radius:50%;
-    animation:spin 1s linear infinite;
-    margin-bottom:20px;
+/* 🎥 cinematic zoom */
+.zoom{
+    animation:zoomIn 1.2s ease forwards;
+}
+@keyframes zoomIn{
+    from{transform:scale(1)}
+    to{transform:scale(1.15)}
 }
 
-@keyframes spin{
-    to{transform:rotate(360deg);}
+/* ไพ่ container */
+#cards{
+    position:relative;
+    width:420px;
+    height:420px;
+    margin:40px auto;
+    animation:rotateRing 20s linear infinite;
 }
 
-button{
-    padding:14px 24px;
-    border:none;
-    border-radius:12px;
-    background:#9333ea;
-    color:white;
-    font-size:18px;
+@keyframes rotateRing{
+    from{transform:rotate(0deg)}
+    to{transform:rotate(360deg)}
 }
 
 /* ไพ่ */
-#cards{
-    display:flex;
-    justify-content:center;
-    flex-wrap:wrap;
-    gap:20px;
-    margin-top:30px;
-}
-
 .card{
-    width:140px;
-    height:230px;
+    width:120px;
+    height:200px;
+    position:absolute;
+    left:50%;
+    top:50%;
+    transform-origin:center -180px;
     perspective:1000px;
-    position:relative;
+    transition:1s;
 }
 
 .inner{
@@ -98,21 +83,17 @@ button{
     position:absolute;
     width:100%;
     height:100%;
-    border-radius:12px;
+    border-radius:14px;
     backface-visibility:hidden;
     overflow:hidden;
     border:2px solid gold;
 }
 
-/* ✅ ปกไพ่ (แก้ชื่อแล้ว) */
 .front{
     background:url("13D5B6B3-91B5-4A63-BFEC-C09AF3BDD8BA.png") center/cover no-repeat;
 }
 
-/* ไพ่จริง */
-.back{
-    transform:rotateY(180deg);
-}
+.back{ transform:rotateY(180deg); }
 
 .back img{
     width:100%;
@@ -120,59 +101,96 @@ button{
     object-fit:cover;
 }
 
-.reversed{
-    transform:rotate(180deg);
+.reversed{ transform:rotate(180deg); }
+
+/* ไพ่ลอยเข้ากลาง */
+.centerFly{
+    position:fixed !important;
+    left:50% !important;
+    top:50% !important;
+    transform:translate(-50%,-50%) scale(1.4) !important;
+    z-index:999;
 }
 
-/* ✨ เรืองแสง */
+/* เรียงกลาง 3 ใบ */
+.centerRow{
+    position:relative !important;
+    left:auto !important;
+    top:auto !important;
+    transform:none !important;
+    display:inline-block;
+    margin:10px;
+}
+
+/* 💥 แสงระเบิด */
+.burst{
+    position:absolute;
+    width:220px;
+    height:220px;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    border-radius:50%;
+    background:radial-gradient(circle,white,gold,transparent 70%);
+    animation:burstAnim 0.6s ease-out;
+}
+@keyframes burstAnim{
+    from{transform:translate(-50%,-50%) scale(0.2);opacity:1}
+    to{transform:translate(-50%,-50%) scale(1.8);opacity:0}
+}
+
+/* glow */
 .glow{
     box-shadow:
         0 0 20px gold,
-        0 0 40px #a855f7,
+        0 0 40px #facc15,
         0 0 70px #9333ea;
 }
 
-/* ✨ ไพ่สั่น */
-@keyframes shake{
-    0%{transform:translate(0,0)}
-    25%{transform:translate(2px,-2px)}
-    50%{transform:translate(-2px,2px)}
-    75%{transform:translate(2px,2px)}
-    100%{transform:translate(0,0)}
-}
-.shake{
-    animation:shake 0.4s infinite;
-}
-
-/* ✨ แสงวิ่งรอบ */
-.lightRun{
-    position:absolute;
-    inset:-3px;
-    border-radius:14px;
-    pointer-events:none;
-    background:linear-gradient(90deg,transparent,gold,transparent);
-    background-size:200%;
-    animation:run 1.2s linear infinite;
-}
-@keyframes run{
-    from{background-position:0%}
-    to{background-position:200%}
+/* loading */
+.loading{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.85);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    font-size:22px;
+    z-index:9999;
+    display:none;
 }
 
-/* ✨ ฝุ่นวิญญาณ */
-.particle{
-    position:absolute;
-    width:6px;
-    height:6px;
-    background:#c084fc;
+.spinner{
+    width:60px;
+    height:60px;
+    border:5px solid gold;
+    border-top:5px solid transparent;
     border-radius:50%;
-    opacity:0.8;
-    animation:float 2s linear infinite;
+    animation:spin 1s linear infinite;
+    margin-bottom:20px;
 }
-@keyframes float{
-    from{transform:translateY(0) scale(1);opacity:1}
-    to{transform:translateY(-120px) scale(0.3);opacity:0}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* ปุ่ม */
+button{
+    padding:14px 28px;
+    border:none;
+    border-radius:14px;
+    background:linear-gradient(45deg,#9333ea,#facc15);
+    color:white;
+    font-size:18px;
 }
+
+/* magic */
+.magic{
+    position:fixed;
+    inset:0;
+    background: radial-gradient(circle, rgba(255,215,0,0.35) 0%, transparent 60%);
+    opacity:0;
+    transition:1s;
+}
+.magic.show{opacity:1;}
 
 </style>
 </head>
@@ -255,10 +273,13 @@ function start(){
 
         speakAI("เลือกไพ่สามใบ ตามสัญชาตญาณของคุณ");
 
-        shuffled.forEach(name=>{
+        shuffled.forEach((name,index)=>{
+
+            const angle = (360 / shuffled.length) * index;
 
             const card = document.createElement("div");
             card.className="card";
+            card.style.transform = `translate(-50%,-50%) rotate(${angle}deg)`;
 
             const inner = document.createElement("div");
             inner.className="inner";
@@ -287,42 +308,32 @@ function start(){
 
 }
 
-/* ฝุ่น */
-function createParticles(card){
-    for(let i=0;i<12;i++){
-        const p=document.createElement("div");
-        p.className="particle";
-        p.style.left=Math.random()*100+"%";
-        p.style.bottom="0px";
-        card.appendChild(p);
-        setTimeout(()=>p.remove(),2000);
-    }
-}
-
 function pick(card,inner,name,img){
 
     if(selected>=3) return;
 
     flashMagic();
 
-    inner.classList.add("glow","shake");
+    document.getElementById("cards").style.animation="none";
 
-    const light=document.createElement("div");
-    light.className="lightRun";
-    card.appendChild(light);
+    card.classList.add("centerFly");
+    document.body.classList.add("zoom");
 
-    createParticles(card);
+    const burst=document.createElement("div");
+    burst.className="burst";
+    card.appendChild(burst);
+
+    inner.classList.add("glow");
 
     setTimeout(()=>{
-        inner.classList.remove("shake");
         inner.classList.add("flip");
-        light.remove();
     },600);
 
     let reversed = Math.random()<0.5;
     if(reversed) img.classList.add("reversed");
 
     chosen.push({
+        el:card,
         name:name.replace(".png","").replaceAll("_"," "),
         reversed:reversed
     });
@@ -330,17 +341,30 @@ function pick(card,inner,name,img){
     selected++;
 
     if(selected===3){
-        setTimeout(()=>{
-            showLoading("กำลังอ่านพลังงานจักรวาล...");
-            speakAI("ฉันกำลังเชื่อมต่อพลังงานของจักรวาล");
-
-            setTimeout(()=>{
-                hideLoading();
-                analyze();
-            },2500);
-
-        },1000);
+        setTimeout(showFinalCards,1200);
     }
+}
+
+function showFinalCards(){
+
+    const cardsDiv = document.getElementById("cards");
+
+    cardsDiv.innerHTML="";
+    document.body.classList.remove("zoom");
+
+    chosen.forEach(c=>{
+        c.el.classList.remove("centerFly");
+        c.el.classList.add("centerRow");
+        cardsDiv.appendChild(c.el);
+    });
+
+    showLoading("กำลังอ่านพลังงานจักรวาล...");
+    speakAI("ฉันกำลังเชื่อมต่อพลังงานของจักรวาล");
+
+    setTimeout(()=>{
+        hideLoading();
+        analyze();
+    },2500);
 }
 
 function generateAI(card){
@@ -348,29 +372,7 @@ function generateAI(card){
 return `✨ ไพ่ ${card} ได้ปรากฏขึ้นต่อหน้าคุณ ✨
 
 พลังงานของจักรวาลกำลังเคลื่อนไหวรอบตัวคุณในช่วงเวลานี้
-สิ่งที่คุณกำลังเผชิญไม่ใช่เรื่องบังเอิญ
-แต่เป็นเส้นทางที่ถูกกำหนดมาเพื่อให้คุณเติบโต
-
-ไพ่ใบนี้สะท้อนถึงการเปลี่ยนแปลงภายในจิตใจ
-และโอกาสใหม่ที่กำลังเข้ามาใกล้
-
-คุณอาจรู้สึกสับสนในบางเรื่อง
-แต่ความจริงแล้วคุณกำลังเข้าใกล้คำตอบมากขึ้น
-
-ช่วงเวลานี้ควรใช้สัญชาตญาณมากกว่าเหตุผล
-เพราะพลังงานลึกภายในกำลังนำทางคุณ
-
-ในด้านความรัก ไพ่บอกถึงการพัฒนา
-หรือการเปลี่ยนสถานะบางอย่าง
-
-ด้านการเงิน มีแนวโน้มดีขึ้น
-หากคุณกล้าตัดสินใจ
-
-ด้านอนาคต คุณกำลังเข้าสู่ช่วงสำคัญของชีวิต
-
-สิ่งสำคัญที่สุดคือ
 จงเชื่อมั่นในตัวเอง
-
 จักรวาลกำลังสนับสนุนคุณอยู่เสมอ`;
 }
 
