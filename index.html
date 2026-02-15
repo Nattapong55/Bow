@@ -3,183 +3,258 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Magic Love 💖</title>
+<title>ไพ่ดูดวงความรัก 🔮</title>
 
 <style>
-body {
-    margin: 0;
-    font-family: 'Prompt', sans-serif;
-    overflow: hidden;
-    height: 100vh;
-    background: radial-gradient(circle at top, #ffd6ec, #c2d6ff, #e0b3ff);
+
+body{
+    margin:0;
+    height:100vh;
+    overflow:hidden;
+    font-family:'Prompt',sans-serif;
+    background: radial-gradient(circle at top,#140028,#2a004d,#4b0082);
+    color:white;
 }
 
 /* ดาว */
-.star {
-    position: absolute;
-    width: 4px;
-    height: 4px;
-    background: white;
-    border-radius: 50%;
-    animation: twinkle 2s infinite alternate;
+.star{
+    position:absolute;
+    width:3px;
+    height:3px;
+    background:white;
+    border-radius:50%;
+    animation:twinkle 2s infinite alternate;
 }
 
-@keyframes twinkle {
-    from {opacity: 0.2;}
-    to {opacity: 1;}
+@keyframes twinkle{
+    from{opacity:.2;}
+    to{opacity:1;}
 }
 
-/* กล่องหลัก */
-.container {
-    position: relative;
-    z-index: 2;
-    text-align: center;
-    top: 40%;
-    transform: translateY(-50%);
+/* container */
+.container{
+    text-align:center;
+    position:relative;
+    top:50%;
+    transform:translateY(-50%);
 }
 
-h1 {
-    color: #ff4da6;
-    font-size: 2.5em;
-    text-shadow: 0 0 20px rgba(255,255,255,0.8);
+h1{
+    color:#ffd6ff;
+    text-shadow:0 0 20px #ff66ff,0 0 40px #ff99ff;
 }
 
-/* ปุ่ม */
-button {
-    border: none;
-    padding: 15px 30px;
-    border-radius: 30px;
-    font-size: 18px;
-    cursor: pointer;
-    margin: 10px;
-    transition: 0.3s;
+/* cards */
+.cards{
+    display:flex;
+    justify-content:center;
+    gap:30px;
+    margin-top:30px;
 }
 
-#loveBtn {
-    background: linear-gradient(45deg,#ff4da6,#ff85c1);
-    color: white;
-    box-shadow: 0 0 20px pink;
+.card{
+    width:160px;
+    height:240px;
+    perspective:1000px;
+    cursor:pointer;
 }
 
-#noLoveBtn {
-    background: #555;
-    color: white;
-    position: fixed;
-    left: 60%;
-    top: 65%;
+.card-inner{
+    width:100%;
+    height:100%;
+    position:relative;
+    transform-style:preserve-3d;
+    transition:transform 1s;
 }
 
-/* เอฟเฟกต์หัวใจ */
-.heart {
-    position: absolute;
-    color: red;
-    font-size: 20px;
-    animation: float 3s linear forwards;
+.card.flip .card-inner{
+    transform:rotateY(180deg);
 }
 
-@keyframes float {
-    from {transform: translateY(0); opacity: 1;}
-    to {transform: translateY(-200px); opacity: 0;}
+.card-front,
+.card-back{
+    position:absolute;
+    inset:0;
+    border-radius:15px;
+    backface-visibility:hidden;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:15px;
 }
 
-/* หน้า popup */
-#popup {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.7);
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    z-index: 5;
-    color: white;
+.card-front{
+    background:linear-gradient(45deg,#5a00a3,#c266ff);
+    font-size:40px;
+    box-shadow:0 0 20px #c266ff,0 0 40px #ff99ff;
+    animation:glow 2s infinite alternate;
 }
 
-#popup img {
-    width: 250px;
-    border-radius: 20px;
-    box-shadow: 0 0 30px pink;
+.card-back{
+    background:linear-gradient(45deg,#ff99cc,#ffd6ff);
+    transform:rotateY(180deg);
+    color:#330033;
+    font-size:15px;
 }
 
-.downloadBtn {
-    margin-top: 20px;
-    background: #ff4da6;
-    color: white;
+@keyframes glow{
+    from{box-shadow:0 0 10px #c266ff;}
+    to{box-shadow:0 0 30px #ff99ff;}
 }
+
+/* popup */
+#popup{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.85);
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    animation:fadeIn 1s;
+}
+
+@keyframes fadeIn{
+    from{opacity:0;}
+    to{opacity:1;}
+}
+
+#popup h1{
+    font-size:40px;
+    color:#ffccff;
+    text-shadow:0 0 20px pink,0 0 40px hotpink;
+    animation:pulse 1.5s infinite;
+}
+
+@keyframes pulse{
+    0%{transform:scale(1);}
+    50%{transform:scale(1.1);}
+    100%{transform:scale(1);}
+}
+
+/* magic particles */
+.magic{
+    position:absolute;
+    width:6px;
+    height:6px;
+    background:#ff99ff;
+    border-radius:50%;
+    pointer-events:none;
+    animation:float 3s linear forwards;
+}
+
+@keyframes float{
+    to{
+        transform:translateY(-200px) scale(0);
+        opacity:0;
+    }
+}
+
 </style>
 </head>
 
 <body>
 
-<!-- ดาว -->
 <div id="stars"></div>
 
 <div class="container">
-    <h1>โบรักเค้ามั้ย 💖</h1>
-    <button id="loveBtn">💖 รัก</button>
-    <button id="noLoveBtn">ไม่รัก</button>
+    <h1>🔮 เปิดไพ่ทำนายความรัก 🔮</h1>
+    <p>เลือกไพ่ 3 ใบ เพื่อดู อดีต • ปัจจุบัน • อนาคต</p>
+
+    <div class="cards">
+
+        <div class="card" onclick="openCard(this,0)">
+            <div class="card-inner">
+                <div class="card-front">✨</div>
+                <div class="card-back" id="card0">อดีต</div>
+            </div>
+        </div>
+
+        <div class="card" onclick="openCard(this,1)">
+            <div class="card-inner">
+                <div class="card-front">✨</div>
+                <div class="card-back" id="card1">ปัจจุบัน</div>
+            </div>
+        </div>
+
+        <div class="card" onclick="openCard(this,2)">
+            <div class="card-inner">
+                <div class="card-front">✨</div>
+                <div class="card-back" id="card2">อนาคต</div>
+            </div>
+        </div>
+
+    </div>
 </div>
 
-<!-- popup -->
 <div id="popup">
-    <h1>เค้ารู้ว่าโบต้องรัก 💕</h1>
-
-    <!-- ฝังรูปในไฟล์ -->
-    <img src="data:image/jpeg;base64,
-    /9j/4AAQSkZJRgABAQAAAQABAAD..." id="loveImage">
-
-    <button class="downloadBtn" onclick="downloadImage()">ดาวน์โหลดรูป</button>
+    <h1>💖 เป็นแฟนกันนะ 💖</h1>
 </div>
+
+<!-- เสียง -->
+<audio id="magicSound">
+<source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_115b9b1d7c.mp3?filename=magic-3-11231.mp3">
+</audio>
 
 <script>
 
-/* สร้างดาว */
-for (let i = 0; i < 80; i++) {
-    let star = document.createElement("div");
-    star.className = "star";
-    star.style.left = Math.random()*100+"%";
-    star.style.top = Math.random()*100+"%";
-    document.body.appendChild(star);
+/* ดาวพื้นหลัง */
+for(let i=0;i<120;i++){
+    let s=document.createElement("div");
+    s.className="star";
+    s.style.left=Math.random()*100+"%";
+    s.style.top=Math.random()*100+"%";
+    document.body.appendChild(s);
 }
 
-/* ปุ่มไม่รักวิ่งหนี 3 ครั้ง */
-let count = 0;
-const noBtn = document.getElementById("noLoveBtn");
+/* คำทำนาย */
+const texts=[
+"อดีต : เราสองคนถูกโชคชะตาพามาเจอกัน",
+"ปัจจุบัน : มีคนคนหนึ่งรักคุณมากกว่าที่คุณคิด",
+"อนาคต : ความรักครั้งนี้กำลังจะชัดเจนขึ้น ❤️"
+];
 
-noBtn.addEventListener("click", () => {
-    if (count < 3) {
-        noBtn.style.left = Math.random()*80+"%";
-        noBtn.style.top = Math.random()*80+"%";
-        count++;
-    }
-});
+let opened=[false,false,false];
+let count=0;
 
-/* ปุ่มรัก */
-document.getElementById("loveBtn").onclick = () => {
-    document.getElementById("popup").style.display = "flex";
-    createHearts();
-};
+function openCard(el,i){
 
-/* หัวใจลอย */
-function createHearts() {
-    for (let i = 0; i < 20; i++) {
-        let heart = document.createElement("div");
-        heart.className = "heart";
-        heart.innerHTML = "💖";
-        heart.style.left = Math.random()*100+"%";
-        heart.style.top = "70%";
-        document.body.appendChild(heart);
+    if(opened[i]) return;
 
-        setTimeout(()=>heart.remove(),3000);
+    document.getElementById("magicSound").play();
+
+    el.classList.add("flip");
+    document.getElementById("card"+i).innerHTML=texts[i];
+
+    opened[i]=true;
+    count++;
+
+    magicEffect(el);
+
+    if(count===3){
+        setTimeout(()=>{
+            document.getElementById("popup").style.display="flex";
+        },1500);
     }
 }
 
-/* ดาวน์โหลดรูป */
-function downloadImage() {
-    const link = document.createElement('a');
-    link.href = document.getElementById("loveImage").src;
-    link.download = "love.jpg";
-    link.click();
+/* เอฟเฟกต์เวทมนตร์ */
+function magicEffect(el){
+
+    for(let i=0;i<20;i++){
+
+        let m=document.createElement("div");
+        m.className="magic";
+
+        let rect=el.getBoundingClientRect();
+
+        m.style.left=rect.left+rect.width/2+"px";
+        m.style.top=rect.top+rect.height/2+"px";
+
+        document.body.appendChild(m);
+
+        setTimeout(()=>m.remove(),3000);
+    }
 }
 
 </script>
