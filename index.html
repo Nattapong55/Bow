@@ -90,6 +90,7 @@ button{
     transform:rotateY(180deg);
     background-size:cover;
     background-position:center;
+    background-repeat:no-repeat;
     border:2px solid white;
 }
 
@@ -145,7 +146,7 @@ input{
 <div id="result"></div>
 
 <audio id="magicSound">
-<source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_115b9b1d7c.mp3">
+<source src="magic.mp3">
 </audio>
 
 <script>
@@ -159,10 +160,9 @@ for(let i=0;i<180;i++){
     document.body.appendChild(s);
 }
 
-/* ไพ่ 78 ใบ */
-const tarot=[];
+/* ===== ไพ่ ===== */
 
-const names=[
+const tarotNames = [
 "The Fool","The Magician","The High Priestess","The Empress","The Emperor",
 "The Hierophant","The Lovers","The Chariot","Strength","The Hermit",
 "Wheel of Fortune","Justice","The Hanged Man","Death","Temperance",
@@ -170,23 +170,32 @@ const names=[
 "Judgement","The World"
 ];
 
-names.forEach(n=>{
+const suits=["cups","pentacles","swords","wands"];
+const ranks=["ace","two","three","four","five","six","seven","eight","nine","ten","page","knight","queen","king"];
+
+let tarot=[];
+
+function formatFile(name){
+    return name.toLowerCase().replace(/ /g,"_");
+}
+
+/* Major */
+tarotNames.forEach(n=>{
     tarot.push({
         name:n,
-        img:`https://raw.githubusercontent.com/ekelen/tarot-api/master/static/cards/${n.toLowerCase().replace(/ /g,"_")}.jpg`,
+        file:formatFile(n),
         meaning:"พลังงานสำคัญของชีวิต การเปลี่ยนแปลง และโอกาสใหม่"
     });
 });
 
-const suits=["cups","pentacles","swords","wands"];
-const ranks=["ace","two","three","four","five","six","seven","eight","nine","ten","page","knight","queen","king"];
-
+/* Minor */
 suits.forEach(s=>{
     ranks.forEach(r=>{
+        let n = r+" of "+s;
         tarot.push({
-            name:r+" of "+s,
-            img:`https://raw.githubusercontent.com/ekelen/tarot-api/master/static/cards/${r}_of_${s}.jpg`,
-            meaning:"สถานการณ์ในชีวิตประจำวันที่มีบทเรียนให้เรียนรู้"
+            name:n,
+            file:formatFile(n),
+            meaning:"เหตุการณ์ในชีวิตประจำวันที่กำลังเกิดขึ้น"
         });
     });
 });
@@ -237,7 +246,7 @@ function selectCard(card,index){
     let data=tarot[index];
 
     let back=card.querySelector(".back");
-    back.style.backgroundImage=`url('${data.img}')`;
+    back.style.backgroundImage=`url(cards/${data.file}.jpg)`;
 
     if(reversed){
         back.style.transform="rotateY(180deg) rotate(180deg)";
@@ -271,7 +280,7 @@ function magic(el){
     }
 }
 
-/* AI วิเคราะห์ */
+/* วิเคราะห์ */
 function showResult(){
 
     const pos=["อดีต","ปัจจุบัน","อนาคต"];
@@ -284,18 +293,16 @@ function showResult(){
         text+=`
         <b>${pos[i]}: ${p.data.name}</b>
         ${p.reversed?"(กลับหัว)":""}
-        <br>
-        ${p.data.meaning}
-        <hr>
-        `;
+        <br>${p.data.meaning}
+        <hr>`;
     });
 
     text+=`
     <h3>🔮 AI วิเคราะห์</h3>
-    ไพ่ทั้งสามใบสะท้อนว่าชีวิตกำลังอยู่ในช่วงเปลี่ยนแปลง
-    คำถามเกี่ยวกับ "${question}" มีแนวโน้มไปในทางที่ดี
-    หากคุณเชื่อมั่นในตัวเอง และตัดสินใจอย่างมีสติ
-    ผลลัพธ์จะออกมาน่าพอใจ
+    ไพ่ทั้งสามใบสะท้อนว่าคำถามเกี่ยวกับ "${question}" 
+    กำลังอยู่ในช่วงเปลี่ยนแปลงสำคัญ
+    หากคุณเชื่อในสัญชาตญาณของตนเอง
+    เส้นทางจะเปิดออกในทิศทางที่ดี
     `;
 
     document.getElementById("result").innerHTML=text;
@@ -304,12 +311,11 @@ function showResult(){
 }
 
 /* เสียง */
-function speak(t){
+function speak(text){
 
-    let msg=new SpeechSynthesisUtterance(t);
+    let msg=new SpeechSynthesisUtterance(text);
     msg.lang="th-TH";
     speechSynthesis.speak(msg);
-
 }
 
 </script>
