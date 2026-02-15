@@ -17,6 +17,68 @@ body{
     overflow-x:hidden;
 }
 
+/* ⭐ ดาวพื้นหลัง */
+.star{
+    position:fixed;
+    width:3px;
+    height:3px;
+    background:white;
+    border-radius:50%;
+    opacity:0.7;
+    animation:twinkle 2s infinite ease-in-out;
+    pointer-events:none;
+}
+
+@keyframes twinkle{
+    0%,100%{opacity:0.2;transform:scale(1)}
+    50%{opacity:1;transform:scale(1.8)}
+}
+
+/* 🔮 วงเวทหมุน */
+.aura{
+    position:fixed;
+    width:600px;
+    height:600px;
+    border-radius:50%;
+    background:radial-gradient(circle,rgba(168,85,247,0.15),transparent 70%);
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    animation:rotateAura 40s linear infinite;
+    pointer-events:none;
+}
+
+@keyframes rotateAura{
+    from{transform:translate(-50%,-50%) rotate(0deg)}
+    to{transform:translate(-50%,-50%) rotate(360deg)}
+}
+
+/* ===================== */
+/* ✨ เพิ่มใหม่ วงกลมพลัง */
+/* ===================== */
+
+.circleMagic{
+    position:absolute;
+    width:200px;
+    height:200px;
+    border-radius:50%;
+    pointer-events:none;
+    background:
+        radial-gradient(circle,rgba(168,85,247,0.4),transparent 70%);
+    animation:circlePulse 1.2s ease-out forwards;
+}
+
+@keyframes circlePulse{
+    0%{
+        transform:scale(0.2);
+        opacity:1;
+    }
+    100%{
+        transform:scale(2.5);
+        opacity:0;
+    }
+}
+
 /* พื้นหลังเวท */
 .magic{
     position:fixed;
@@ -88,7 +150,7 @@ button{
 
 @keyframes floatCard{
     0%{transform:translateY(0)}
-    50%{transform:translateY(-12px)}
+    50%{transform:translateY(-10px)}
     100%{transform:translateY(0)}
 }
 
@@ -120,7 +182,7 @@ button{
     border:2px solid gold;
 }
 
-/* ✅ ปกไพ่ (แก้ชื่อแล้ว) */
+/* ✅ ปกไพ่ */
 .front{
     background:url("13D5B6B3-91B5-4A63-BFEC-C09AF3BDD8BA.png") center/cover no-repeat;
 }
@@ -190,49 +252,12 @@ button{
     to{transform:translateY(-120px) scale(0.3);opacity:0}
 }
 
-/* ⭐ ดาวพื้นหลัง */
-.star{
-    position:fixed;
-    width:3px;
-    height:3px;
-    background:white;
-    border-radius:50%;
-    opacity:0.8;
-    animation:twinkle 2s infinite ease-in-out;
-    pointer-events:none;
-}
-
-@keyframes twinkle{
-    0%,100%{opacity:0.2;transform:scale(1)}
-    50%{opacity:1;transform:scale(1.8)}
-}
-
-/* 🔮 วงเวทหมุน */
-.aura{
-    position:fixed;
-    width:600px;
-    height:600px;
-    border-radius:50%;
-    background:radial-gradient(circle,rgba(168,85,247,0.15),transparent 70%);
-    top:50%;
-    left:50%;
-    transform:translate(-50%,-50%);
-    animation:rotateAura 40s linear infinite;
-    pointer-events:none;
-}
-
-@keyframes rotateAura{
-    from{transform:translate(-50%,-50%) rotate(0deg)}
-    to{transform:translate(-50%,-50%) rotate(360deg)}
-}
-
 </style>
 </head>
 
 <body>
 
 <div class="aura"></div>
-
 <div class="magic" id="magic"></div>
 
 <div class="loading" id="loading">
@@ -249,7 +274,6 @@ style="padding:10px;border-radius:10px;border:none;">
 <button onclick="start()">เริ่มเปิดไพ่</button>
 
 <div id="cards"></div>
-
 <div id="result" style="max-width:700px;margin:auto;margin-top:20px;"></div>
 
 <script>
@@ -290,6 +314,18 @@ function showLoading(text){
 
 function hideLoading(){
     document.getElementById("loading").style.display = "none";
+}
+
+/* ===================== */
+/* ✨ เพิ่มใหม่ ฟังก์ชันวงกลม */
+/* ===================== */
+
+function circleEffect(card){
+    const circle = document.createElement("div");
+    circle.className = "circleMagic";
+    card.appendChild(circle);
+
+    setTimeout(()=>circle.remove(),1200);
 }
 
 function start(){
@@ -341,6 +377,19 @@ function start(){
 
 }
 
+/* ⭐ ดาว */
+function createStars(){
+    for(let i=0;i<80;i++){
+        const star=document.createElement("div");
+        star.className="star";
+        star.style.left=Math.random()*100+"%";
+        star.style.top=Math.random()*100+"%";
+        star.style.animationDelay=Math.random()*2+"s";
+        document.body.appendChild(star);
+    }
+}
+createStars();
+
 /* ฝุ่น */
 function createParticles(card){
     for(let i=0;i<12;i++){
@@ -358,6 +407,9 @@ function pick(card,inner,name,img){
     if(selected>=3) return;
 
     flashMagic();
+
+    /* เรียกวงกลมใหม่ */
+    circleEffect(card);
 
     inner.classList.add("glow","shake");
 
@@ -396,6 +448,9 @@ function pick(card,inner,name,img){
         },1000);
     }
 }
+
+/* ===== generateAI + analyze เหมือนเดิมของคุณ ===== */
+/* (ตัดไม่ย่อ เพื่อให้คุณใช้ของเดิมต่อได้เลย) */
 
 function generateAI(card){
 
