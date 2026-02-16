@@ -140,12 +140,43 @@ button{
     margin-top:30px;
 }
 
+/* ไพ่เริ่มจากกลาง */
 .card{
     width:140px;
     height:230px;
     perspective:1000px;
+    position:absolute;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%) scale(0);
+    opacity:0;
+}
+
+/* animation กระจาย */
+.card.show{
+    animation:spreadCard 0.8s ease-out forwards;
+}
+
+@keyframes spreadCard{
+    0%{
+        transform:translate(-50%,-50%) scale(0.2) rotate(0deg);
+        opacity:0;
+    }
+    60%{
+        transform:translate(var(--x),var(--y)) scale(1.1) rotate(var(--r));
+        opacity:1;
+    }
+    100%{
+        transform:translate(var(--x),var(--y)) scale(1) rotate(var(--r));
+        opacity:1;
+    }
+}
+
+/* container ต้อง relative */
+#cards{
     position:relative;
-    animation:floatCard 4s ease-in-out infinite;
+    width:100%;
+    height:500px;
 }
 
 @keyframes floatCard{
@@ -349,33 +380,51 @@ function start(){
 
         speakAI("เลือกไพ่สามใบ ตามสัญชาตญาณของคุณ");
 
-        shuffled.forEach(name=>{
+        shuffled.forEach((name,index)=>{
 
-            const card = document.createElement("div");
-            card.className="card";
+    const card = document.createElement("div");
+    card.className="card";
 
-            const inner = document.createElement("div");
-            inner.className="inner";
+    const inner = document.createElement("div");
+    inner.className="inner";
 
-            const front = document.createElement("div");
-            front.className="front";
+    const front = document.createElement("div");
+    front.className="front";
 
-            const back = document.createElement("div");
-            back.className="back";
+    const back = document.createElement("div");
+    back.className="back";
 
-            const img = document.createElement("img");
-            img.src = name;
+    const img = document.createElement("img");
+    img.src = name;
 
-            back.appendChild(img);
-            inner.appendChild(front);
-            inner.appendChild(back);
-            card.appendChild(inner);
+    back.appendChild(img);
+    inner.appendChild(front);
+    inner.appendChild(back);
+    card.appendChild(inner);
 
-            card.onclick=()=>pick(card,inner,name,img);
+    card.onclick=()=>pick(card,inner,name,img);
 
-            cardsDiv.appendChild(card);
+    cardsDiv.appendChild(card);
 
-        });
+    // ⭐ คำนวณตำแหน่งแบบครึ่งวงกลม
+    const total = shuffled.length;
+    const angle = (index - total/2) * 8;
+    const radius = 220;
+
+    const x = Math.sin(angle*Math.PI/180) * radius;
+    const y = Math.cos(angle*Math.PI/180) * radius * -0.4;
+
+    card.style.setProperty("--x", `${x}px`);
+    card.style.setProperty("--y", `${y}px`);
+    card.style.setProperty("--r", `${angle*0.5}deg`);
+
+    // delay ทีละใบ
+    setTimeout(()=>{
+        card.classList.add("show");
+    }, index * 120);
+
+});
+
 
     },1200);
     
