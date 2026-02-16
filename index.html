@@ -261,23 +261,6 @@ button{
     <source src="bg.mp3" type="audio/mpeg">
 </audio>
 
-<script>
-window.addEventListener("load", () => {
-
-    const music = document.getElementById("bgMusic");
-
-    music.volume = 0.4;
-    music.muted = false;
-
-    music.play().catch(() => {
-        document.addEventListener("click", () => {
-            music.play();
-        }, { once: true });
-    });
-
-});
-</script>
-
 <div class="aura"></div>
 <div class="magic" id="magic"></div>
 
@@ -395,6 +378,7 @@ function start(){
         });
 
     },1200);
+    
 
 }
 
@@ -863,6 +847,27 @@ function analyze(){
 }
 
 </script>
+
+<script>
+window.addEventListener("load", () => {
+
+    const music = document.getElementById("bgMusic");
+
+    music.volume = 0.4;
+
+    setTimeout(() => {
+        music.muted = false;
+        music.play().catch(() => {
+            document.addEventListener("click", () => {
+                music.play();
+            }, { once: true });
+        });
+    }, 500);
+
+});
+</script>
+
+</body>
 
 </body>
 </html>
