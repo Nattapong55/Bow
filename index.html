@@ -183,11 +183,14 @@ button{
     0%{
         transform:translate(-50%,-50%) scale(1);
     }
+
     100%{
-        transform:translate(var(--x),var(--y)) rotate(var(--r));
+        transform:
+            translate(calc(-50% + var(--x)),
+                      calc(-50% + var(--y)))
+            rotate(var(--r));
     }
 }
-
 
 @keyframes spreadCard{
     0%{
@@ -406,7 +409,7 @@ function start(){
     const cardsDiv = document.getElementById("cards");
     cardsDiv.innerHTML = "";
 
-    let shuffled = [...deck].sort(()=>Math.random()-0.5).slice(0,15);
+    let shuffled = [...deck].sort(()=>Math.random()-0.5).slice(0,21);
 
     setTimeout(()=>{
 
@@ -440,28 +443,28 @@ function start(){
 
     // คำนวณตำแหน่งครึ่งวงกลม
 const total = shuffled.length;
+
 const angle = (index - total/2) * 8;
-const radius = 230;
+const radius = 260;
 
 const x = Math.sin(angle*Math.PI/180) * radius;
-const y = Math.cos(angle*Math.PI/180) * radius * -0.4;
+const y = Math.cos(angle*Math.PI/180) * radius * -0.5;
 
-card.style.setProperty("--x", `${x}px`);
-card.style.setProperty("--y", `${y}px`);
-card.style.setProperty("--r", `${angle*0.4}deg`);
+card.style.setProperty("--x", x + "px");
+card.style.setProperty("--y", y + "px");
+card.style.setProperty("--r", angle * 0.4 + "deg");
 
 
-// ขั้นที่ 1 : บินขึ้น
+// บินขึ้น
 setTimeout(()=>{
     card.classList.add("fly");
 }, index * 80);
 
 
-// ขั้นที่ 2 : กระจาย
+// กระจาย
 setTimeout(()=>{
     card.classList.add("spread");
 }, index * 80 + 700);
-
 
 });
 
