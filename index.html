@@ -583,15 +583,13 @@ function pick(card,inner,name,img){
     if(reversed) img.classList.add("reversed");
 
     chosen.push({
-        name:name.replace(".png","").replaceAll("_"," "),
-        reversed:reversed
-// ==========================
-// 🎴 ทำให้ไพ่เด้งมากลางจอ
-// ==========================
+    name:name.replace(".png","").replaceAll("_"," "),
+    reversed:reversed
+});
 
+// เอฟเฟคเด้งกลางจอ
 card.classList.add("focused");
 
-// เรียงตำแหน่งใบที่ 1,2,3
 setTimeout(()=>{
 
     if(selected === 0)
@@ -605,9 +603,7 @@ setTimeout(()=>{
 
 },50);
 
-    });
-
-    selected++;
+selected++;
 
     if(selected===3){
         setTimeout(()=>{
