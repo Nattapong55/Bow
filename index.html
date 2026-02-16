@@ -635,17 +635,26 @@ if(selected === 3){
 
     setTimeout(()=>{
 
-        const all = document.querySelectorAll(".card.focused");
+        const focused = Array.from(document.querySelectorAll(".card"))
+            .filter(c => c.style.zIndex == "10000");
 
-        if(all[0]) all[0].classList.add("final1");
-        if(all[1]) all[1].classList.add("final2");
-        if(all[2]) all[2].classList.add("final3");
+        focused.forEach((card,i)=>{
 
-    },600);
+            card.classList.remove("spread","fly");
+
+            card.classList.add("focused");
+
+            if(i === 0) card.classList.add("final1");
+            if(i === 1) card.classList.add("final2");
+            if(i === 2) card.classList.add("final3");
+
+        });
+
+    },400);
 
 }
 
-
+}
 
     if(selected===3){
         setTimeout(()=>{
