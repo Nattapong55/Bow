@@ -254,6 +254,10 @@ button{
 
 </style>
 </head>
+    <audio id="bgMusic" loop>
+    <source src="bg.mp3" type="audio/mpeg">
+</audio>
+
 
 <body>
 
@@ -272,6 +276,11 @@ style="padding:10px;border-radius:10px;border:none;">
 <br><br>
 
 <button onclick="start()">เริ่มเปิดไพ่</button>
+
+<br><br>
+
+<button onclick="toggleMusic()">🔊 เปิด / ปิด เพลง</button>
+
 
 <div id="cards"></div>
 <div id="result" style="max-width:700px;margin:auto;margin-top:20px;"></div>
@@ -296,6 +305,25 @@ function flashMagic(){
     m.classList.add("show");
     setTimeout(()=>m.classList.remove("show"),1000);
 }
+
+function playMusic(){
+    const music = document.getElementById("bgMusic");
+    music.volume = 0.4; // ปรับเสียง
+    music.play();
+}
+    
+function toggleMusic(){
+
+    const music = document.getElementById("bgMusic");
+
+    if(music.paused){
+        music.play();
+    }else{
+        music.pause();
+    }
+
+}
+
 
 function speakAI(text){
     const speech = new SpeechSynthesisUtterance(text);
@@ -330,7 +358,10 @@ function circleEffect(card){
 
 function start(){
 
+    playMusic();
+
     speakAI("กำลังสับไพ่ โปรดตั้งสมาธิ");
+
 
     selected = 0;
     chosen = [];
