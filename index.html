@@ -364,6 +364,23 @@ button{
     transform:translate(-50%,-50%) scale(1.2) !important;
     z-index:9999;
 }
+    
+.card.final1,
+.card.final2,
+.card.final3{
+
+    animation:
+        finalReveal 0.8s ease,
+        floatIdle 3s ease-in-out infinite;
+
+}
+
+@keyframes floatIdle{
+
+    0%,100%{ transform:translate(-50%,-50%) scale(1.2) }
+    50%{ transform:translate(-50%,-60%) scale(1.22) }
+
+}
 
 
 @keyframes cardPop{
@@ -635,14 +652,11 @@ if(selected === 3){
 
     setTimeout(()=>{
 
-        const focused = Array.from(document.querySelectorAll(".card"))
-            .filter(c => c.style.zIndex == "10000");
+        const focused = document.querySelectorAll(".card.focused");
 
         focused.forEach((card,i)=>{
 
             card.classList.remove("spread","fly");
-
-            card.classList.add("focused");
 
             if(i === 0) card.classList.add("final1");
             if(i === 1) card.classList.add("final2");
