@@ -329,21 +329,16 @@ button{
 
     position:fixed !important;
 
-    top:50%;
-    left:50%;
+    top:50% !important;
+    left:50% !important;
 
-    transform:translate(-50%, -50%) scale(1.4);
+    z-index:10000 !important;
 
-    z-index:9999 !important;
+    opacity:1 !important;
+    filter:none !important;
 
-    pointer-events:none;
+    animation:none !important;
 
-    animation:cardPop 0.6s ease;
-
-    box-shadow:
-    0 0 30px gold,
-    0 0 60px #a855f7,
-    0 0 120px #9333ea;
 }
 
 @keyframes cardPop{
@@ -367,16 +362,17 @@ button{
 /* เรียง 3 ใบ */
 
 .card.focus1{
-    transform:translate(calc(-50% - 220px), -50%) scale(1.4);
+    transform:translate(calc(-50% - 240px), -50%) scale(1.4) !important;
 }
 
 .card.focus2{
-    transform:translate(-50%, -50%) scale(1.4);
+    transform:translate(-50%, -50%) scale(1.4) !important;
 }
 
 .card.focus3{
-    transform:translate(calc(-50% + 220px), -50%) scale(1.4);
+    transform:translate(calc(-50% + 240px), -50%) scale(1.4) !important;
 }
+
 
 
 </style>
@@ -591,6 +587,9 @@ function pick(card,inner,name,img){
         reversed:reversed
     });
     // 🎴 ทำให้ไพ่เด้งมากลางจอ
+    
+card.classList.remove("spread");
+card.classList.remove("fly");
 
 card.classList.add("focused");
 
@@ -602,7 +601,8 @@ document.querySelectorAll(".card").forEach(c=>{
     }
 });
 
-// เรียงตำแหน่ง 3 ใบ
+// 🔥 ลบ focus เก่า (สำคัญมาก)
+card.classList.remove("focus1","focus2","focus3");
 
 setTimeout(()=>{
 
@@ -617,8 +617,8 @@ setTimeout(()=>{
 
 },50);
 
-
     selected++;
+
 
     if(selected===3){
         setTimeout(()=>{
