@@ -601,9 +601,6 @@ function pick(card,inner,name,img){
         light.remove();
     },600);
 
-    let reversed = Math.random()<0.5;
-    if(reversed) img.classList.add("reversed");
-
     chosen.push({
         name:name.replace(".png","").replaceAll("_"," "),
         reversed:reversed
