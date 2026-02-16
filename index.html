@@ -641,6 +641,20 @@ setTimeout(()=>{
 
     selected++;
 
+if(selected === 3){
+
+    setTimeout(()=>{
+
+        const cards = document.querySelectorAll(".card.focused");
+
+        if(cards[0]) cards[0].classList.add("final1");
+        if(cards[1]) cards[1].classList.add("final2");
+        if(cards[2]) cards[2].classList.add("final3");
+
+    },400);
+
+}
+
 
     if(selected===3){
         setTimeout(()=>{
