@@ -340,6 +340,34 @@ button{
     animation:none !important;
 
 }
+    /* ===================== */
+/* 🎴 FINAL SPREAD LAYOUT */
+/* ===================== */
+
+.card.final1{
+    position:fixed !important;
+    left:calc(50% - 260px);
+    top:45%;
+    transform:translate(-50%,-50%) scale(1.2) !important;
+    z-index:9999;
+}
+
+.card.final2{
+    position:fixed !important;
+    left:50%;
+    top:45%;
+    transform:translate(-50%,-50%) scale(1.2) !important;
+    z-index:9999;
+}
+
+.card.final3{
+    position:fixed !important;
+    left:calc(50% + 260px);
+    top:45%;
+    transform:translate(-50%,-50%) scale(1.2) !important;
+    z-index:9999;
+}
+
 
 @keyframes cardPop{
 
@@ -358,21 +386,6 @@ button{
     }
 
 }
-
-/* เรียง 3 ใบ */
-
-.card.focus1{
-    transform:translate(calc(-50% - 240px), -50%) scale(1.4) !important;
-}
-
-.card.focus2{
-    transform:translate(-50%, -50%) scale(1.4) !important;
-}
-
-.card.focus3{
-    transform:translate(calc(-50% + 240px), -50%) scale(1.4) !important;
-}
-
 
 
 </style>
@@ -618,6 +631,23 @@ setTimeout(()=>{
 },50);
 
     selected++;
+    
+    // ⭐ เมื่อเลือกครบ 3 ใบ → จัด layout จริง
+
+if(selected === 3){
+
+    setTimeout(()=>{
+
+        const all = document.querySelectorAll(".card.focused");
+
+        if(all[0]) all[0].classList.add("final1");
+        if(all[1]) all[1].classList.add("final2");
+        if(all[2]) all[2].classList.add("final3");
+
+    },600);
+
+}
+
 
 
     if(selected===3){
