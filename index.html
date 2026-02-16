@@ -317,6 +317,67 @@ button{
     from{transform:translateY(0) scale(1);opacity:1}
     to{transform:translateY(-120px) scale(0.3);opacity:0}
 }
+    /* ===================== */
+/* 🎴 ไพ่เด้งมากลางจอ */
+/* ===================== */
+
+.card{
+    z-index:1;
+}
+
+.card.focused{
+
+    position:fixed !important;
+
+    top:50%;
+    left:50%;
+
+    transform:translate(-50%, -50%) scale(1.4);
+
+    z-index:9999 !important;
+
+    pointer-events:none;
+
+    animation:cardPop 0.6s ease;
+
+    box-shadow:
+    0 0 30px gold,
+    0 0 60px #a855f7,
+    0 0 120px #9333ea;
+}
+
+@keyframes cardPop{
+
+    0%{
+        transform:translate(-50%, 200px) scale(0.3);
+        opacity:0;
+    }
+
+    60%{
+        transform:translate(-50%, -60%) scale(1.5);
+    }
+
+    100%{
+        transform:translate(-50%, -50%) scale(1.4);
+        opacity:1;
+    }
+
+}
+
+/* เรียง 3 ใบ */
+
+.card.focus1{
+    transform:translate(calc(-50% - 220px), -50%) scale(1.4);
+}
+
+.card.focus2{
+    transform:translate(-50%, -50%) scale(1.4);
+}
+
+.card.focus3{
+    transform:translate(calc(-50% + 220px), -50%) scale(1.4);
+}
+
 
 </style>
 </head>
@@ -529,6 +590,33 @@ function pick(card,inner,name,img){
         name:name.replace(".png","").replaceAll("_"," "),
         reversed:reversed
     });
+    // 🎴 ทำให้ไพ่เด้งมากลางจอ
+
+card.classList.add("focused");
+
+// fade ไพ่ใบอื่น
+document.querySelectorAll(".card").forEach(c=>{
+    if(c !== card){
+        c.style.opacity = "0.2";
+        c.style.filter = "blur(4px)";
+    }
+});
+
+// เรียงตำแหน่ง 3 ใบ
+
+setTimeout(()=>{
+
+    if(selected === 0)
+        card.classList.add("focus1");
+
+    if(selected === 1)
+        card.classList.add("focus2");
+
+    if(selected === 2)
+        card.classList.add("focus3");
+
+},50);
+
 
     selected++;
 
